@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:SsToCorona/SsToCorona.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:SsToCocos2d/SsToCocos2d.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:SsToHtml5/SsToHtml5.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:StaticLib/StaticLib.xcodeproj">
+   </FileRef>
+</Workspace>

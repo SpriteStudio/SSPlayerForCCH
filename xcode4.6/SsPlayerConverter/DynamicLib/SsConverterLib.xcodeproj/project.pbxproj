@@ -1,0 +1,388 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		11083B211721173800962154 /* ConverterShared.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 11083B201721173800962154 /* ConverterShared.cpp */; };
+		111DF1F917A796BB005F2BD0 /* BinaryDataWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 111DF1F817A796BB005F2BD0 /* BinaryDataWriter.cpp */; };
+		111DF1FB17A796D2005F2BD0 /* DebugUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 111DF1FA17A796D2005F2BD0 /* DebugUtil.cpp */; };
+		112EEAD217044F0A001A002E /* CoronaSaver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 112EEAD017044F0A001A002E /* CoronaSaver.cpp */; };
+		112EEAD317044F0A001A002E /* CoronaSaver.h in Headers */ = {isa = PBXBuildFile; fileRef = 112EEAD117044F0A001A002E /* CoronaSaver.h */; };
+		112EEAD517044F15001A002E /* SsToCorona.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 112EEAD417044F15001A002E /* SsToCorona.cpp */; };
+		1140FF1216E88AC8003D990A /* SsToCocos2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1140FF1016E88AC8003D990A /* SsToCocos2d.cpp */; };
+		1140FF1316E88AC8003D990A /* SsToHtml5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1140FF1116E88AC8003D990A /* SsToHtml5.cpp */; };
+		1140FF2C16E88AD1003D990A /* Canvas2dSaver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1140FF1416E88AD1003D990A /* Canvas2dSaver.cpp */; };
+		1140FF2D16E88AD1003D990A /* Canvas2dSaver.h in Sources */ = {isa = PBXBuildFile; fileRef = 1140FF1516E88AD1003D990A /* Canvas2dSaver.h */; };
+		1140FF2E16E88AD1003D990A /* Cocos2dSaver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1140FF1616E88AD1003D990A /* Cocos2dSaver.cpp */; };
+		1140FF2F16E88AD1003D990A /* Cocos2dSaver.h in Sources */ = {isa = PBXBuildFile; fileRef = 1140FF1716E88AD1003D990A /* Cocos2dSaver.h */; };
+		1140FF3016E88AD1003D990A /* FileUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1140FF1816E88AD1003D990A /* FileUtil.cpp */; };
+		1140FF3116E88AD1003D990A /* FileUtil.h in Sources */ = {isa = PBXBuildFile; fileRef = 1140FF1916E88AD1003D990A /* FileUtil.h */; };
+		1140FF3216E88AD1003D990A /* MathUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1140FF1A16E88AD1003D990A /* MathUtil.cpp */; };
+		1140FF3316E88AD1003D990A /* MathUtil.h in Sources */ = {isa = PBXBuildFile; fileRef = 1140FF1B16E88AD1003D990A /* MathUtil.h */; };
+		1140FF3416E88AD1003D990A /* SaverUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1140FF1C16E88AD1003D990A /* SaverUtil.cpp */; };
+		1140FF3516E88AD1003D990A /* SaverUtil.h in Sources */ = {isa = PBXBuildFile; fileRef = 1140FF1D16E88AD1003D990A /* SaverUtil.h */; };
+		1140FF3616E88AD1003D990A /* SsaxLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1140FF1E16E88AD1003D990A /* SsaxLoader.cpp */; };
+		1140FF3716E88AD1003D990A /* SsaxLoader.h in Sources */ = {isa = PBXBuildFile; fileRef = 1140FF1F16E88AD1003D990A /* SsaxLoader.h */; };
+		1140FF3816E88AD1003D990A /* SsfLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1140FF2016E88AD1003D990A /* SsfLoader.cpp */; };
+		1140FF3916E88AD1003D990A /* SsfLoader.h in Sources */ = {isa = PBXBuildFile; fileRef = 1140FF2116E88AD1003D990A /* SsfLoader.h */; };
+		1140FF3A16E88AD1003D990A /* SsMotion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1140FF2216E88AD1003D990A /* SsMotion.cpp */; };
+		1140FF3B16E88AD1003D990A /* SsMotion.h in Sources */ = {isa = PBXBuildFile; fileRef = 1140FF2316E88AD1003D990A /* SsMotion.h */; };
+		1140FF3C16E88AD1003D990A /* SsMotionDecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1140FF2416E88AD1003D990A /* SsMotionDecoder.cpp */; };
+		1140FF3D16E88AD1003D990A /* SsMotionDecoder.h in Sources */ = {isa = PBXBuildFile; fileRef = 1140FF2516E88AD1003D990A /* SsMotionDecoder.h */; };
+		1140FF3E16E88AD1003D990A /* SsMotionUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1140FF2616E88AD1003D990A /* SsMotionUtil.cpp */; };
+		1140FF3F16E88AD1003D990A /* SsMotionUtil.h in Sources */ = {isa = PBXBuildFile; fileRef = 1140FF2716E88AD1003D990A /* SsMotionUtil.h */; };
+		1140FF4016E88AD1003D990A /* TextEncoding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1140FF2816E88AD1003D990A /* TextEncoding.cpp */; };
+		1140FF4116E88AD1003D990A /* TextEncoding.h in Sources */ = {isa = PBXBuildFile; fileRef = 1140FF2916E88AD1003D990A /* TextEncoding.h */; };
+		1140FF4216E88AD1003D990A /* XmlUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1140FF2A16E88AD1003D990A /* XmlUtil.cpp */; };
+		1140FF4316E88AD1003D990A /* XmlUtil.h in Sources */ = {isa = PBXBuildFile; fileRef = 1140FF2B16E88AD1003D990A /* XmlUtil.h */; };
+		1140FF5416E89B71003D990A /* libiconv.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1140FF5216E89B65003D990A /* libiconv.2.dylib */; };
+		114EEAC216E8AA6B00980F2A /* libboost_filesystem.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 114EEABF16E8AA6B00980F2A /* libboost_filesystem.a */; };
+		114EEAC316E8AA6B00980F2A /* libboost_program_options.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 114EEAC016E8AA6B00980F2A /* libboost_program_options.a */; };
+		114EEAC416E8AA6B00980F2A /* libboost_system.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 114EEAC116E8AA6B00980F2A /* libboost_system.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		11083B201721173800962154 /* ConverterShared.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConverterShared.cpp; path = ../../../src/converter/ConverterShared.cpp; sourceTree = "<group>"; };
+		111DF1F817A796BB005F2BD0 /* BinaryDataWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BinaryDataWriter.cpp; path = ../../../src/common/BinaryDataWriter.cpp; sourceTree = "<group>"; };
+		111DF1FA17A796D2005F2BD0 /* DebugUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DebugUtil.cpp; path = ../../../src/common/DebugUtil.cpp; sourceTree = "<group>"; };
+		112EEAD017044F0A001A002E /* CoronaSaver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CoronaSaver.cpp; path = ../../../src/common/CoronaSaver.cpp; sourceTree = "<group>"; };
+		112EEAD117044F0A001A002E /* CoronaSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CoronaSaver.h; path = ../../../src/common/CoronaSaver.h; sourceTree = "<group>"; };
+		112EEAD417044F15001A002E /* SsToCorona.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SsToCorona.cpp; path = ../../../src/converter/SsToCorona.cpp; sourceTree = "<group>"; };
+		1140FED516E88760003D990A /* libSsConverterLib.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libSsConverterLib.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		1140FF1016E88AC8003D990A /* SsToCocos2d.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; name = SsToCocos2d.cpp; path = ../../../src/converter/SsToCocos2d.cpp; sourceTree = "<group>"; };
+		1140FF1116E88AC8003D990A /* SsToHtml5.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; name = SsToHtml5.cpp; path = ../../../src/converter/SsToHtml5.cpp; sourceTree = "<group>"; };
+		1140FF1416E88AD1003D990A /* Canvas2dSaver.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; name = Canvas2dSaver.cpp; path = ../../../src/common/Canvas2dSaver.cpp; sourceTree = "<group>"; };
+		1140FF1516E88AD1003D990A /* Canvas2dSaver.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; name = Canvas2dSaver.h; path = ../../../src/common/Canvas2dSaver.h; sourceTree = "<group>"; };
+		1140FF1616E88AD1003D990A /* Cocos2dSaver.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; name = Cocos2dSaver.cpp; path = ../../../src/common/Cocos2dSaver.cpp; sourceTree = "<group>"; };
+		1140FF1716E88AD1003D990A /* Cocos2dSaver.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; name = Cocos2dSaver.h; path = ../../../src/common/Cocos2dSaver.h; sourceTree = "<group>"; };
+		1140FF1816E88AD1003D990A /* FileUtil.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; name = FileUtil.cpp; path = ../../../src/common/FileUtil.cpp; sourceTree = "<group>"; };
+		1140FF1916E88AD1003D990A /* FileUtil.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; name = FileUtil.h; path = ../../../src/common/FileUtil.h; sourceTree = "<group>"; };
+		1140FF1A16E88AD1003D990A /* MathUtil.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; name = MathUtil.cpp; path = ../../../src/common/MathUtil.cpp; sourceTree = "<group>"; };
+		1140FF1B16E88AD1003D990A /* MathUtil.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; name = MathUtil.h; path = ../../../src/common/MathUtil.h; sourceTree = "<group>"; };
+		1140FF1C16E88AD1003D990A /* SaverUtil.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; name = SaverUtil.cpp; path = ../../../src/common/SaverUtil.cpp; sourceTree = "<group>"; };
+		1140FF1D16E88AD1003D990A /* SaverUtil.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; name = SaverUtil.h; path = ../../../src/common/SaverUtil.h; sourceTree = "<group>"; };
+		1140FF1E16E88AD1003D990A /* SsaxLoader.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; name = SsaxLoader.cpp; path = ../../../src/common/SsaxLoader.cpp; sourceTree = "<group>"; };
+		1140FF1F16E88AD1003D990A /* SsaxLoader.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; name = SsaxLoader.h; path = ../../../src/common/SsaxLoader.h; sourceTree = "<group>"; };
+		1140FF2016E88AD1003D990A /* SsfLoader.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; name = SsfLoader.cpp; path = ../../../src/common/SsfLoader.cpp; sourceTree = "<group>"; };
+		1140FF2116E88AD1003D990A /* SsfLoader.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; name = SsfLoader.h; path = ../../../src/common/SsfLoader.h; sourceTree = "<group>"; };
+		1140FF2216E88AD1003D990A /* SsMotion.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; name = SsMotion.cpp; path = ../../../src/common/SsMotion.cpp; sourceTree = "<group>"; };
+		1140FF2316E88AD1003D990A /* SsMotion.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; name = SsMotion.h; path = ../../../src/common/SsMotion.h; sourceTree = "<group>"; };
+		1140FF2416E88AD1003D990A /* SsMotionDecoder.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; name = SsMotionDecoder.cpp; path = ../../../src/common/SsMotionDecoder.cpp; sourceTree = "<group>"; };
+		1140FF2516E88AD1003D990A /* SsMotionDecoder.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; name = SsMotionDecoder.h; path = ../../../src/common/SsMotionDecoder.h; sourceTree = "<group>"; };
+		1140FF2616E88AD1003D990A /* SsMotionUtil.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; name = SsMotionUtil.cpp; path = ../../../src/common/SsMotionUtil.cpp; sourceTree = "<group>"; };
+		1140FF2716E88AD1003D990A /* SsMotionUtil.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; name = SsMotionUtil.h; path = ../../../src/common/SsMotionUtil.h; sourceTree = "<group>"; };
+		1140FF2816E88AD1003D990A /* TextEncoding.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; name = TextEncoding.cpp; path = ../../../src/common/TextEncoding.cpp; sourceTree = "<group>"; };
+		1140FF2916E88AD1003D990A /* TextEncoding.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; name = TextEncoding.h; path = ../../../src/common/TextEncoding.h; sourceTree = "<group>"; };
+		1140FF2A16E88AD1003D990A /* XmlUtil.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; name = XmlUtil.cpp; path = ../../../src/common/XmlUtil.cpp; sourceTree = "<group>"; };
+		1140FF2B16E88AD1003D990A /* XmlUtil.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; name = XmlUtil.h; path = ../../../src/common/XmlUtil.h; sourceTree = "<group>"; };
+		1140FF5216E89B65003D990A /* libiconv.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.dylib; path = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/usr/lib/libiconv.2.dylib; sourceTree = "<absolute>"; };
+		114EEABF16E8AA6B00980F2A /* libboost_filesystem.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_filesystem.a; path = lib/libboost_filesystem.a; sourceTree = "<group>"; };
+		114EEAC016E8AA6B00980F2A /* libboost_program_options.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_program_options.a; path = lib/libboost_program_options.a; sourceTree = "<group>"; };
+		114EEAC116E8AA6B00980F2A /* libboost_system.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_system.a; path = lib/libboost_system.a; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1140FED216E88760003D990A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1140FF5416E89B71003D990A /* libiconv.2.dylib in Frameworks */,
+				114EEAC216E8AA6B00980F2A /* libboost_filesystem.a in Frameworks */,
+				114EEAC316E8AA6B00980F2A /* libboost_program_options.a in Frameworks */,
+				114EEAC416E8AA6B00980F2A /* libboost_system.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1140FECC16E88760003D990A = {
+			isa = PBXGroup;
+			children = (
+				11083B201721173800962154 /* ConverterShared.cpp */,
+				112EEAD417044F15001A002E /* SsToCorona.cpp */,
+				112EEAD017044F0A001A002E /* CoronaSaver.cpp */,
+				112EEAD117044F0A001A002E /* CoronaSaver.h */,
+				1140FF5116E89A61003D990A /* include */,
+				1140FF5016E89A59003D990A /* libs */,
+				111DF1F817A796BB005F2BD0 /* BinaryDataWriter.cpp */,
+				1140FF1416E88AD1003D990A /* Canvas2dSaver.cpp */,
+				1140FF1616E88AD1003D990A /* Cocos2dSaver.cpp */,
+				111DF1FA17A796D2005F2BD0 /* DebugUtil.cpp */,
+				1140FF1816E88AD1003D990A /* FileUtil.cpp */,
+				1140FF1A16E88AD1003D990A /* MathUtil.cpp */,
+				1140FF1C16E88AD1003D990A /* SaverUtil.cpp */,
+				1140FF1E16E88AD1003D990A /* SsaxLoader.cpp */,
+				1140FF2016E88AD1003D990A /* SsfLoader.cpp */,
+				1140FF2216E88AD1003D990A /* SsMotion.cpp */,
+				1140FF2416E88AD1003D990A /* SsMotionDecoder.cpp */,
+				1140FF2616E88AD1003D990A /* SsMotionUtil.cpp */,
+				1140FF2816E88AD1003D990A /* TextEncoding.cpp */,
+				1140FF2A16E88AD1003D990A /* XmlUtil.cpp */,
+				1140FF1016E88AC8003D990A /* SsToCocos2d.cpp */,
+				1140FF1116E88AC8003D990A /* SsToHtml5.cpp */,
+				1140FED616E88760003D990A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1140FED616E88760003D990A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1140FED516E88760003D990A /* libSsConverterLib.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1140FF5016E89A59003D990A /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				114EEABF16E8AA6B00980F2A /* libboost_filesystem.a */,
+				114EEAC016E8AA6B00980F2A /* libboost_program_options.a */,
+				114EEAC116E8AA6B00980F2A /* libboost_system.a */,
+				1140FF5216E89B65003D990A /* libiconv.2.dylib */,
+			);
+			name = libs;
+			sourceTree = "<group>";
+		};
+		1140FF5116E89A61003D990A /* include */ = {
+			isa = PBXGroup;
+			children = (
+				1140FF1516E88AD1003D990A /* Canvas2dSaver.h */,
+				1140FF1716E88AD1003D990A /* Cocos2dSaver.h */,
+				1140FF1916E88AD1003D990A /* FileUtil.h */,
+				1140FF1B16E88AD1003D990A /* MathUtil.h */,
+				1140FF1D16E88AD1003D990A /* SaverUtil.h */,
+				1140FF1F16E88AD1003D990A /* SsaxLoader.h */,
+				1140FF2116E88AD1003D990A /* SsfLoader.h */,
+				1140FF2316E88AD1003D990A /* SsMotion.h */,
+				1140FF2516E88AD1003D990A /* SsMotionDecoder.h */,
+				1140FF2716E88AD1003D990A /* SsMotionUtil.h */,
+				1140FF2916E88AD1003D990A /* TextEncoding.h */,
+				1140FF2B16E88AD1003D990A /* XmlUtil.h */,
+			);
+			name = include;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		1140FED316E88760003D990A /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				112EEAD317044F0A001A002E /* CoronaSaver.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		1140FED416E88760003D990A /* SsConverterLib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1140FED916E88760003D990A /* Build configuration list for PBXNativeTarget "SsConverterLib" */;
+			buildPhases = (
+				1140FED116E88760003D990A /* Sources */,
+				1140FED216E88760003D990A /* Frameworks */,
+				1140FED316E88760003D990A /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SsConverterLib;
+			productName = DynamicLib;
+			productReference = 1140FED516E88760003D990A /* libSsConverterLib.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1140FECD16E88760003D990A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = "Web Technology";
+			};
+			buildConfigurationList = 1140FED016E88760003D990A /* Build configuration list for PBXProject "SsConverterLib" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 1140FECC16E88760003D990A;
+			productRefGroup = 1140FED616E88760003D990A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1140FED416E88760003D990A /* SsConverterLib */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1140FED116E88760003D990A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1140FF1216E88AC8003D990A /* SsToCocos2d.cpp in Sources */,
+				1140FF1316E88AC8003D990A /* SsToHtml5.cpp in Sources */,
+				1140FF2C16E88AD1003D990A /* Canvas2dSaver.cpp in Sources */,
+				1140FF2D16E88AD1003D990A /* Canvas2dSaver.h in Sources */,
+				1140FF2E16E88AD1003D990A /* Cocos2dSaver.cpp in Sources */,
+				1140FF2F16E88AD1003D990A /* Cocos2dSaver.h in Sources */,
+				1140FF3016E88AD1003D990A /* FileUtil.cpp in Sources */,
+				1140FF3116E88AD1003D990A /* FileUtil.h in Sources */,
+				1140FF3216E88AD1003D990A /* MathUtil.cpp in Sources */,
+				1140FF3316E88AD1003D990A /* MathUtil.h in Sources */,
+				1140FF3416E88AD1003D990A /* SaverUtil.cpp in Sources */,
+				1140FF3516E88AD1003D990A /* SaverUtil.h in Sources */,
+				1140FF3616E88AD1003D990A /* SsaxLoader.cpp in Sources */,
+				1140FF3716E88AD1003D990A /* SsaxLoader.h in Sources */,
+				1140FF3816E88AD1003D990A /* SsfLoader.cpp in Sources */,
+				1140FF3916E88AD1003D990A /* SsfLoader.h in Sources */,
+				1140FF3A16E88AD1003D990A /* SsMotion.cpp in Sources */,
+				1140FF3B16E88AD1003D990A /* SsMotion.h in Sources */,
+				1140FF3C16E88AD1003D990A /* SsMotionDecoder.cpp in Sources */,
+				1140FF3D16E88AD1003D990A /* SsMotionDecoder.h in Sources */,
+				1140FF3E16E88AD1003D990A /* SsMotionUtil.cpp in Sources */,
+				1140FF3F16E88AD1003D990A /* SsMotionUtil.h in Sources */,
+				1140FF4016E88AD1003D990A /* TextEncoding.cpp in Sources */,
+				1140FF4116E88AD1003D990A /* TextEncoding.h in Sources */,
+				1140FF4216E88AD1003D990A /* XmlUtil.cpp in Sources */,
+				1140FF4316E88AD1003D990A /* XmlUtil.h in Sources */,
+				112EEAD217044F0A001A002E /* CoronaSaver.cpp in Sources */,
+				112EEAD517044F15001A002E /* SsToCorona.cpp in Sources */,
+				11083B211721173800962154 /* ConverterShared.cpp in Sources */,
+				111DF1F917A796BB005F2BD0 /* BinaryDataWriter.cpp in Sources */,
+				111DF1FB17A796D2005F2BD0 /* DebugUtil.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1140FED716E88760003D990A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /Users/Shared/Delopment/boost_1_53_0;
+				INSTALL_PATH = "@executable_path/";
+				LIBRARY_SEARCH_PATHS = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.7;
+			};
+			name = Debug;
+		};
+		1140FED816E88760003D990A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /Users/Shared/Delopment/boost_1_53_0;
+				INSTALL_PATH = "@executable_path/";
+				LIBRARY_SEARCH_PATHS = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx10.7;
+			};
+			name = Release;
+		};
+		1140FEDA16E88760003D990A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = /Users/Shared/Development/boost_1_53_0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(Inherited)",
+					"\"$(SRCROOT)/../lib\"",
+					"\"$(SRCROOT)/lib\"",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx10.8;
+			};
+			name = Debug;
+		};
+		1140FEDB16E88760003D990A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = /Users/Shared/Development/boost_1_53_0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(Inherited)",
+					"\"$(SRCROOT)/../lib\"",
+					"\"$(SRCROOT)/lib\"",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx10.8;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1140FED016E88760003D990A /* Build configuration list for PBXProject "SsConverterLib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1140FED716E88760003D990A /* Debug */,
+				1140FED816E88760003D990A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1140FED916E88760003D990A /* Build configuration list for PBXNativeTarget "SsConverterLib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1140FEDA16E88760003D990A /* Debug */,
+				1140FEDB16E88760003D990A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1140FECD16E88760003D990A /* Project object */;
+}

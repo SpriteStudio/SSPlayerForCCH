@@ -1,0 +1,256 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7359275016EF1AF000D1D642 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7359274F16EF1AF000D1D642 /* main.cpp */; };
+		7359275216EF1AF000D1D642 /* SsToCorona.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7359275116EF1AF000D1D642 /* SsToCorona.1 */; };
+		7359275916EF1B5000D1D642 /* libStaticLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7359275816EF1B5000D1D642 /* libStaticLib.a */; };
+		7359275B16EF1B5F00D1D642 /* libiconv.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7359275A16EF1B5F00D1D642 /* libiconv.2.dylib */; };
+		7359275F16EF1B6F00D1D642 /* libboost_system.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7359275C16EF1B6F00D1D642 /* libboost_system.a */; };
+		7359276016EF1B6F00D1D642 /* libboost_program_options.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7359275D16EF1B6F00D1D642 /* libboost_program_options.a */; };
+		7359276116EF1B6F00D1D642 /* libboost_filesystem.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7359275E16EF1B6F00D1D642 /* libboost_filesystem.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		7359274A16EF1AF000D1D642 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				7359275216EF1AF000D1D642 /* SsToCorona.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		7359274C16EF1AF000D1D642 /* SsToCorona */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SsToCorona; sourceTree = BUILT_PRODUCTS_DIR; };
+		7359274F16EF1AF000D1D642 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		7359275116EF1AF000D1D642 /* SsToCorona.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = SsToCorona.1; sourceTree = "<group>"; };
+		7359275816EF1B5000D1D642 /* libStaticLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libStaticLib.a; path = ../DerivedData/SsPlayerConverter/Build/Products/Debug/libStaticLib.a; sourceTree = "<group>"; };
+		7359275A16EF1B5F00D1D642 /* libiconv.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.dylib; path = usr/lib/libiconv.2.dylib; sourceTree = SDKROOT; };
+		7359275C16EF1B6F00D1D642 /* libboost_system.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_system.a; path = ../../lib/libboost_system.a; sourceTree = "<group>"; };
+		7359275D16EF1B6F00D1D642 /* libboost_program_options.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_program_options.a; path = ../../lib/libboost_program_options.a; sourceTree = "<group>"; };
+		7359275E16EF1B6F00D1D642 /* libboost_filesystem.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_filesystem.a; path = ../../lib/libboost_filesystem.a; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7359274916EF1AF000D1D642 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7359275F16EF1B6F00D1D642 /* libboost_system.a in Frameworks */,
+				7359276016EF1B6F00D1D642 /* libboost_program_options.a in Frameworks */,
+				7359276116EF1B6F00D1D642 /* libboost_filesystem.a in Frameworks */,
+				7359275B16EF1B5F00D1D642 /* libiconv.2.dylib in Frameworks */,
+				7359275916EF1B5000D1D642 /* libStaticLib.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		7359274316EF1AF000D1D642 = {
+			isa = PBXGroup;
+			children = (
+				7359275C16EF1B6F00D1D642 /* libboost_system.a */,
+				7359275D16EF1B6F00D1D642 /* libboost_program_options.a */,
+				7359275E16EF1B6F00D1D642 /* libboost_filesystem.a */,
+				7359275A16EF1B5F00D1D642 /* libiconv.2.dylib */,
+				7359275816EF1B5000D1D642 /* libStaticLib.a */,
+				7359274E16EF1AF000D1D642 /* SsToCorona */,
+				7359274D16EF1AF000D1D642 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		7359274D16EF1AF000D1D642 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7359274C16EF1AF000D1D642 /* SsToCorona */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7359274E16EF1AF000D1D642 /* SsToCorona */ = {
+			isa = PBXGroup;
+			children = (
+				7359274F16EF1AF000D1D642 /* main.cpp */,
+				7359275116EF1AF000D1D642 /* SsToCorona.1 */,
+			);
+			path = SsToCorona;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7359274B16EF1AF000D1D642 /* SsToCorona */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7359275516EF1AF000D1D642 /* Build configuration list for PBXNativeTarget "SsToCorona" */;
+			buildPhases = (
+				7359274816EF1AF000D1D642 /* Sources */,
+				7359274916EF1AF000D1D642 /* Frameworks */,
+				7359274A16EF1AF000D1D642 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SsToCorona;
+			productName = SsToCorona;
+			productReference = 7359274C16EF1AF000D1D642 /* SsToCorona */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7359274416EF1AF000D1D642 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = "Hiroki Azumada";
+			};
+			buildConfigurationList = 7359274716EF1AF000D1D642 /* Build configuration list for PBXProject "SsToCorona" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 7359274316EF1AF000D1D642;
+			productRefGroup = 7359274D16EF1AF000D1D642 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7359274B16EF1AF000D1D642 /* SsToCorona */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7359274816EF1AF000D1D642 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7359275016EF1AF000D1D642 /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		7359275316EF1AF000D1D642 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libstdc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.7;
+			};
+			name = Debug;
+		};
+		7359275416EF1AF000D1D642 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libstdc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				SDKROOT = macosx10.7;
+			};
+			name = Release;
+		};
+		7359275616EF1AF000D1D642 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../DerivedData/SsPlayerConverter/Build/Products/Debug\"",
+					"\"$(SRCROOT)/../../lib\"",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		7359275716EF1AF000D1D642 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../DerivedData/SsPlayerConverter/Build/Products/Debug\"",
+					"\"$(SRCROOT)/../../lib\"",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		7359274716EF1AF000D1D642 /* Build configuration list for PBXProject "SsToCorona" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7359275316EF1AF000D1D642 /* Debug */,
+				7359275416EF1AF000D1D642 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7359275516EF1AF000D1D642 /* Build configuration list for PBXNativeTarget "SsToCorona" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7359275616EF1AF000D1D642 /* Debug */,
+				7359275716EF1AF000D1D642 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 7359274416EF1AF000D1D642 /* Project object */;
+}

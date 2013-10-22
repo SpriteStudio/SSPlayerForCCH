@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\common\BinaryDataWriter.cpp" />
+    <ClCompile Include="..\..\..\src\common\Canvas2dSaver.cpp" />
+    <ClCompile Include="..\..\..\src\common\Cocos2dSaver.cpp" />
+    <ClCompile Include="..\..\..\src\common\CoronaSaver.cpp" />
+    <ClCompile Include="..\..\..\src\common\DebugUtil.cpp" />
+    <ClCompile Include="..\..\..\src\common\FileUtil.cpp" />
+    <ClCompile Include="..\..\..\src\common\MathUtil.cpp" />
+    <ClCompile Include="..\..\..\src\common\SaverUtil.cpp" />
+    <ClCompile Include="..\..\..\src\common\SsaxLoader.cpp" />
+    <ClCompile Include="..\..\..\src\common\SsfLoader.cpp" />
+    <ClCompile Include="..\..\..\src\common\SsMotion.cpp" />
+    <ClCompile Include="..\..\..\src\common\SsMotionDecoder.cpp" />
+    <ClCompile Include="..\..\..\src\common\SsMotionUtil.cpp" />
+    <ClCompile Include="..\..\..\src\common\TextEncoding.cpp" />
+    <ClCompile Include="..\..\..\src\common\XmlUtil.cpp" />
+    <ClCompile Include="..\..\..\src\converter\ConverterShared.cpp" />
+    <ClCompile Include="..\..\..\src\converter\SsToCocos2d.cpp" />
+    <ClCompile Include="..\..\..\src\converter\SsToCorona.cpp" />
+    <ClCompile Include="..\..\..\src\converter\SsToHtml5.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\src\common\BinaryDataWriter.h" />
+    <ClInclude Include="..\..\..\src\common\Canvas2dSaver.h" />
+    <ClInclude Include="..\..\..\src\common\Cocos2dSaver.h" />
+    <ClInclude Include="..\..\..\src\common\CoronaSaver.h" />
+    <ClInclude Include="..\..\..\src\common\DebugUtil.h" />
+    <ClInclude Include="..\..\..\src\common\FileUtil.h" />
+    <ClInclude Include="..\..\..\src\common\MathUtil.h" />
+    <ClInclude Include="..\..\..\src\common\SaverUtil.h" />
+    <ClInclude Include="..\..\..\src\common\SsaxLoader.h" />
+    <ClInclude Include="..\..\..\src\common\SsfLoader.h" />
+    <ClInclude Include="..\..\..\src\common\SsMotion.h" />
+    <ClInclude Include="..\..\..\src\common\SsMotionDecoder.h" />
+    <ClInclude Include="..\..\..\src\common\SsMotionUtil.h" />
+    <ClInclude Include="..\..\..\src\common\TextEncoding.h" />
+    <ClInclude Include="..\..\..\src\common\XmlUtil.h" />
+    <ClInclude Include="..\..\..\src\converter\ConverterShared.h" />
+    <ClInclude Include="..\..\..\src\converter\SsPlayerConverter.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{EDF2E0B1-23FF-4C94-835A-7DF3DF417859}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>StaticLib</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>..\..\..\..\..\..\boost_1_51_0;..\..\..\src\common;C:\boost_1_52_0;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>..\..\..\..\..\..\boost_1_51_0;..\..\..\src\common;C:\boost_1_51_0;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

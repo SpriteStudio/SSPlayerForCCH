@@ -1,0 +1,387 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7311B53A171E8C9800DE0EAE /* ConverterShared.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7311B538171E8C9800DE0EAE /* ConverterShared.cpp */; };
+		7311B53B171E8C9800DE0EAE /* ConverterShared.h in Headers */ = {isa = PBXBuildFile; fileRef = 7311B539171E8C9800DE0EAE /* ConverterShared.h */; };
+		734E5D1516DB8063008245E5 /* Canvas2dSaver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 734E5CFA16DB8063008245E5 /* Canvas2dSaver.cpp */; };
+		734E5D1616DB8063008245E5 /* Canvas2dSaver.h in Headers */ = {isa = PBXBuildFile; fileRef = 734E5CFB16DB8063008245E5 /* Canvas2dSaver.h */; };
+		734E5D1716DB8063008245E5 /* Cocos2dSaver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 734E5CFC16DB8063008245E5 /* Cocos2dSaver.cpp */; };
+		734E5D1816DB8063008245E5 /* Cocos2dSaver.h in Headers */ = {isa = PBXBuildFile; fileRef = 734E5CFD16DB8063008245E5 /* Cocos2dSaver.h */; };
+		734E5D1916DB8063008245E5 /* FileUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 734E5CFE16DB8063008245E5 /* FileUtil.cpp */; };
+		734E5D1A16DB8063008245E5 /* FileUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 734E5CFF16DB8063008245E5 /* FileUtil.h */; };
+		734E5D1B16DB8063008245E5 /* MathUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 734E5D0016DB8063008245E5 /* MathUtil.cpp */; };
+		734E5D1C16DB8063008245E5 /* MathUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 734E5D0116DB8063008245E5 /* MathUtil.h */; };
+		734E5D1D16DB8063008245E5 /* SaverUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 734E5D0216DB8063008245E5 /* SaverUtil.cpp */; };
+		734E5D1E16DB8063008245E5 /* SaverUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 734E5D0316DB8063008245E5 /* SaverUtil.h */; };
+		734E5D1F16DB8063008245E5 /* SsaxLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 734E5D0416DB8063008245E5 /* SsaxLoader.cpp */; };
+		734E5D2016DB8063008245E5 /* SsaxLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 734E5D0516DB8063008245E5 /* SsaxLoader.h */; };
+		734E5D2116DB8063008245E5 /* SsfLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 734E5D0616DB8063008245E5 /* SsfLoader.cpp */; };
+		734E5D2216DB8063008245E5 /* SsfLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 734E5D0716DB8063008245E5 /* SsfLoader.h */; };
+		734E5D2316DB8063008245E5 /* SsMotion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 734E5D0816DB8063008245E5 /* SsMotion.cpp */; };
+		734E5D2416DB8063008245E5 /* SsMotion.h in Headers */ = {isa = PBXBuildFile; fileRef = 734E5D0916DB8063008245E5 /* SsMotion.h */; };
+		734E5D2516DB8063008245E5 /* SsMotionDecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 734E5D0A16DB8063008245E5 /* SsMotionDecoder.cpp */; };
+		734E5D2616DB8063008245E5 /* SsMotionDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 734E5D0B16DB8063008245E5 /* SsMotionDecoder.h */; };
+		734E5D2716DB8063008245E5 /* SsMotionUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 734E5D0C16DB8063008245E5 /* SsMotionUtil.cpp */; };
+		734E5D2816DB8063008245E5 /* SsMotionUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 734E5D0D16DB8063008245E5 /* SsMotionUtil.h */; };
+		734E5D2916DB8063008245E5 /* TextEncoding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 734E5D0E16DB8063008245E5 /* TextEncoding.cpp */; };
+		734E5D2A16DB8063008245E5 /* TextEncoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 734E5D0F16DB8063008245E5 /* TextEncoding.h */; };
+		734E5D2B16DB8063008245E5 /* XmlUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 734E5D1016DB8063008245E5 /* XmlUtil.cpp */; };
+		734E5D2C16DB8063008245E5 /* XmlUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 734E5D1116DB8063008245E5 /* XmlUtil.h */; };
+		734E5D2D16DB8063008245E5 /* SsToCocos2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 734E5D1316DB8063008245E5 /* SsToCocos2d.cpp */; };
+		734E5D2E16DB8063008245E5 /* SsToHtml5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 734E5D1416DB8063008245E5 /* SsToHtml5.cpp */; };
+		7359273F16EF190700D1D642 /* CoronaSaver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7359273D16EF190700D1D642 /* CoronaSaver.cpp */; };
+		7359274016EF190700D1D642 /* CoronaSaver.h in Headers */ = {isa = PBXBuildFile; fileRef = 7359273E16EF190700D1D642 /* CoronaSaver.h */; };
+		7359274216EF1A0900D1D642 /* SsToCorona.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7359274116EF1A0900D1D642 /* SsToCorona.cpp */; };
+		7360AF5A1782C62A00E90BCD /* DebugUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7360AF581782C62A00E90BCD /* DebugUtil.cpp */; };
+		7360AF5B1782C62A00E90BCD /* DebugUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 7360AF591782C62A00E90BCD /* DebugUtil.h */; };
+		73C860BD17702D4F00274671 /* BinaryDataWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73C860BB17702D4E00274671 /* BinaryDataWriter.cpp */; };
+		73C860BE17702D4F00274671 /* BinaryDataWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 73C860BC17702D4E00274671 /* BinaryDataWriter.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		7311B537171E2B1500DE0EAE /* SsPlayerConverter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SsPlayerConverter.h; sourceTree = "<group>"; };
+		7311B538171E8C9800DE0EAE /* ConverterShared.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConverterShared.cpp; sourceTree = "<group>"; };
+		7311B539171E8C9800DE0EAE /* ConverterShared.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConverterShared.h; sourceTree = "<group>"; };
+		731270D916DB72E500436B3B /* libStaticLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libStaticLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		734E5CFA16DB8063008245E5 /* Canvas2dSaver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = Canvas2dSaver.cpp; sourceTree = "<group>"; };
+		734E5CFB16DB8063008245E5 /* Canvas2dSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Canvas2dSaver.h; sourceTree = "<group>"; };
+		734E5CFC16DB8063008245E5 /* Cocos2dSaver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = Cocos2dSaver.cpp; sourceTree = "<group>"; };
+		734E5CFD16DB8063008245E5 /* Cocos2dSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Cocos2dSaver.h; sourceTree = "<group>"; };
+		734E5CFE16DB8063008245E5 /* FileUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = FileUtil.cpp; sourceTree = "<group>"; };
+		734E5CFF16DB8063008245E5 /* FileUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FileUtil.h; sourceTree = "<group>"; };
+		734E5D0016DB8063008245E5 /* MathUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = MathUtil.cpp; sourceTree = "<group>"; };
+		734E5D0116DB8063008245E5 /* MathUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = MathUtil.h; sourceTree = "<group>"; };
+		734E5D0216DB8063008245E5 /* SaverUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = SaverUtil.cpp; sourceTree = "<group>"; };
+		734E5D0316DB8063008245E5 /* SaverUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SaverUtil.h; sourceTree = "<group>"; };
+		734E5D0416DB8063008245E5 /* SsaxLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = SsaxLoader.cpp; sourceTree = "<group>"; };
+		734E5D0516DB8063008245E5 /* SsaxLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SsaxLoader.h; sourceTree = "<group>"; };
+		734E5D0616DB8063008245E5 /* SsfLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = SsfLoader.cpp; sourceTree = "<group>"; };
+		734E5D0716DB8063008245E5 /* SsfLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SsfLoader.h; sourceTree = "<group>"; };
+		734E5D0816DB8063008245E5 /* SsMotion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = SsMotion.cpp; sourceTree = "<group>"; };
+		734E5D0916DB8063008245E5 /* SsMotion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SsMotion.h; sourceTree = "<group>"; };
+		734E5D0A16DB8063008245E5 /* SsMotionDecoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = SsMotionDecoder.cpp; sourceTree = "<group>"; };
+		734E5D0B16DB8063008245E5 /* SsMotionDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SsMotionDecoder.h; sourceTree = "<group>"; };
+		734E5D0C16DB8063008245E5 /* SsMotionUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = SsMotionUtil.cpp; sourceTree = "<group>"; };
+		734E5D0D16DB8063008245E5 /* SsMotionUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SsMotionUtil.h; sourceTree = "<group>"; };
+		734E5D0E16DB8063008245E5 /* TextEncoding.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = TextEncoding.cpp; sourceTree = "<group>"; };
+		734E5D0F16DB8063008245E5 /* TextEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = TextEncoding.h; sourceTree = "<group>"; };
+		734E5D1016DB8063008245E5 /* XmlUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = XmlUtil.cpp; sourceTree = "<group>"; };
+		734E5D1116DB8063008245E5 /* XmlUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = XmlUtil.h; sourceTree = "<group>"; };
+		734E5D1316DB8063008245E5 /* SsToCocos2d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = SsToCocos2d.cpp; sourceTree = "<group>"; };
+		734E5D1416DB8063008245E5 /* SsToHtml5.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = SsToHtml5.cpp; sourceTree = "<group>"; };
+		7359273D16EF190700D1D642 /* CoronaSaver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = CoronaSaver.cpp; sourceTree = "<group>"; };
+		7359273E16EF190700D1D642 /* CoronaSaver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CoronaSaver.h; sourceTree = "<group>"; };
+		7359274116EF1A0900D1D642 /* SsToCorona.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SsToCorona.cpp; sourceTree = "<group>"; };
+		7360AF581782C62A00E90BCD /* DebugUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DebugUtil.cpp; sourceTree = "<group>"; };
+		7360AF591782C62A00E90BCD /* DebugUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugUtil.h; sourceTree = "<group>"; };
+		73A35E3E16E483D000DB075C /* CHANGELOG.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; lineEnding = 0; path = CHANGELOG.txt; sourceTree = "<group>"; };
+		73C860BB17702D4E00274671 /* BinaryDataWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BinaryDataWriter.cpp; sourceTree = "<group>"; };
+		73C860BC17702D4E00274671 /* BinaryDataWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BinaryDataWriter.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		731270D616DB72E500436B3B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		731270D016DB72E500436B3B = {
+			isa = PBXGroup;
+			children = (
+				734E5CF816DB8063008245E5 /* src */,
+				731270DA16DB72E500436B3B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		731270DA16DB72E500436B3B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				731270D916DB72E500436B3B /* libStaticLib.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		734E5CF816DB8063008245E5 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				734E5CF916DB8063008245E5 /* common */,
+				734E5D1216DB8063008245E5 /* converter */,
+			);
+			name = src;
+			path = ../../../src;
+			sourceTree = "<group>";
+		};
+		734E5CF916DB8063008245E5 /* common */ = {
+			isa = PBXGroup;
+			children = (
+				7359273D16EF190700D1D642 /* CoronaSaver.cpp */,
+				7359273E16EF190700D1D642 /* CoronaSaver.h */,
+				734E5CFA16DB8063008245E5 /* Canvas2dSaver.cpp */,
+				734E5CFB16DB8063008245E5 /* Canvas2dSaver.h */,
+				734E5CFC16DB8063008245E5 /* Cocos2dSaver.cpp */,
+				734E5CFD16DB8063008245E5 /* Cocos2dSaver.h */,
+				734E5CFE16DB8063008245E5 /* FileUtil.cpp */,
+				734E5CFF16DB8063008245E5 /* FileUtil.h */,
+				734E5D0016DB8063008245E5 /* MathUtil.cpp */,
+				734E5D0116DB8063008245E5 /* MathUtil.h */,
+				734E5D0216DB8063008245E5 /* SaverUtil.cpp */,
+				734E5D0316DB8063008245E5 /* SaverUtil.h */,
+				734E5D0416DB8063008245E5 /* SsaxLoader.cpp */,
+				734E5D0516DB8063008245E5 /* SsaxLoader.h */,
+				734E5D0616DB8063008245E5 /* SsfLoader.cpp */,
+				734E5D0716DB8063008245E5 /* SsfLoader.h */,
+				734E5D0816DB8063008245E5 /* SsMotion.cpp */,
+				734E5D0916DB8063008245E5 /* SsMotion.h */,
+				734E5D0A16DB8063008245E5 /* SsMotionDecoder.cpp */,
+				734E5D0B16DB8063008245E5 /* SsMotionDecoder.h */,
+				734E5D0C16DB8063008245E5 /* SsMotionUtil.cpp */,
+				734E5D0D16DB8063008245E5 /* SsMotionUtil.h */,
+				734E5D0E16DB8063008245E5 /* TextEncoding.cpp */,
+				734E5D0F16DB8063008245E5 /* TextEncoding.h */,
+				734E5D1016DB8063008245E5 /* XmlUtil.cpp */,
+				734E5D1116DB8063008245E5 /* XmlUtil.h */,
+				73C860BB17702D4E00274671 /* BinaryDataWriter.cpp */,
+				73C860BC17702D4E00274671 /* BinaryDataWriter.h */,
+				7360AF581782C62A00E90BCD /* DebugUtil.cpp */,
+				7360AF591782C62A00E90BCD /* DebugUtil.h */,
+			);
+			path = common;
+			sourceTree = "<group>";
+		};
+		734E5D1216DB8063008245E5 /* converter */ = {
+			isa = PBXGroup;
+			children = (
+				7359274116EF1A0900D1D642 /* SsToCorona.cpp */,
+				734E5D1316DB8063008245E5 /* SsToCocos2d.cpp */,
+				734E5D1416DB8063008245E5 /* SsToHtml5.cpp */,
+				73A35E3E16E483D000DB075C /* CHANGELOG.txt */,
+				7311B537171E2B1500DE0EAE /* SsPlayerConverter.h */,
+				7311B538171E8C9800DE0EAE /* ConverterShared.cpp */,
+				7311B539171E8C9800DE0EAE /* ConverterShared.h */,
+			);
+			path = converter;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		731270D716DB72E500436B3B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				734E5D1616DB8063008245E5 /* Canvas2dSaver.h in Headers */,
+				734E5D1816DB8063008245E5 /* Cocos2dSaver.h in Headers */,
+				734E5D1A16DB8063008245E5 /* FileUtil.h in Headers */,
+				734E5D1C16DB8063008245E5 /* MathUtil.h in Headers */,
+				734E5D1E16DB8063008245E5 /* SaverUtil.h in Headers */,
+				734E5D2016DB8063008245E5 /* SsaxLoader.h in Headers */,
+				734E5D2216DB8063008245E5 /* SsfLoader.h in Headers */,
+				734E5D2416DB8063008245E5 /* SsMotion.h in Headers */,
+				734E5D2616DB8063008245E5 /* SsMotionDecoder.h in Headers */,
+				734E5D2816DB8063008245E5 /* SsMotionUtil.h in Headers */,
+				734E5D2A16DB8063008245E5 /* TextEncoding.h in Headers */,
+				734E5D2C16DB8063008245E5 /* XmlUtil.h in Headers */,
+				7359274016EF190700D1D642 /* CoronaSaver.h in Headers */,
+				7311B53B171E8C9800DE0EAE /* ConverterShared.h in Headers */,
+				73C860BE17702D4F00274671 /* BinaryDataWriter.h in Headers */,
+				7360AF5B1782C62A00E90BCD /* DebugUtil.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		731270D816DB72E500436B3B /* StaticLib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 731270DD16DB72E500436B3B /* Build configuration list for PBXNativeTarget "StaticLib" */;
+			buildPhases = (
+				731270D516DB72E500436B3B /* Sources */,
+				731270D616DB72E500436B3B /* Frameworks */,
+				731270D716DB72E500436B3B /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = StaticLib;
+			productName = StaticLib;
+			productReference = 731270D916DB72E500436B3B /* libStaticLib.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		731270D116DB72E500436B3B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = "Hiroki Azumada";
+			};
+			buildConfigurationList = 731270D416DB72E500436B3B /* Build configuration list for PBXProject "StaticLib" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 731270D016DB72E500436B3B;
+			productRefGroup = 731270DA16DB72E500436B3B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				731270D816DB72E500436B3B /* StaticLib */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		731270D516DB72E500436B3B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				734E5D1516DB8063008245E5 /* Canvas2dSaver.cpp in Sources */,
+				734E5D1716DB8063008245E5 /* Cocos2dSaver.cpp in Sources */,
+				734E5D1916DB8063008245E5 /* FileUtil.cpp in Sources */,
+				734E5D1B16DB8063008245E5 /* MathUtil.cpp in Sources */,
+				734E5D1D16DB8063008245E5 /* SaverUtil.cpp in Sources */,
+				734E5D1F16DB8063008245E5 /* SsaxLoader.cpp in Sources */,
+				734E5D2116DB8063008245E5 /* SsfLoader.cpp in Sources */,
+				734E5D2316DB8063008245E5 /* SsMotion.cpp in Sources */,
+				734E5D2516DB8063008245E5 /* SsMotionDecoder.cpp in Sources */,
+				734E5D2716DB8063008245E5 /* SsMotionUtil.cpp in Sources */,
+				734E5D2916DB8063008245E5 /* TextEncoding.cpp in Sources */,
+				734E5D2B16DB8063008245E5 /* XmlUtil.cpp in Sources */,
+				734E5D2D16DB8063008245E5 /* SsToCocos2d.cpp in Sources */,
+				734E5D2E16DB8063008245E5 /* SsToHtml5.cpp in Sources */,
+				7359273F16EF190700D1D642 /* CoronaSaver.cpp in Sources */,
+				7359274216EF1A0900D1D642 /* SsToCorona.cpp in Sources */,
+				7311B53A171E8C9800DE0EAE /* ConverterShared.cpp in Sources */,
+				73C860BD17702D4F00274671 /* BinaryDataWriter.cpp in Sources */,
+				7360AF5A1782C62A00E90BCD /* DebugUtil.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		731270DB16DB72E500436B3B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libstdc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /Users/Shared/Development/boost_1_51_0;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.7;
+			};
+			name = Debug;
+		};
+		731270DC16DB72E500436B3B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libstdc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /Users/Shared/Development/boost_1_51_0;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				SDKROOT = macosx10.7;
+			};
+			name = Release;
+		};
+		731270DE16DB72E500436B3B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../lib\"",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		731270DF16DB72E500436B3B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../lib\"",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		731270D416DB72E500436B3B /* Build configuration list for PBXProject "StaticLib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				731270DB16DB72E500436B3B /* Debug */,
+				731270DC16DB72E500436B3B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		731270DD16DB72E500436B3B /* Build configuration list for PBXNativeTarget "StaticLib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				731270DE16DB72E500436B3B /* Debug */,
+				731270DF16DB72E500436B3B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 731270D116DB72E500436B3B /* Project object */;
+}
