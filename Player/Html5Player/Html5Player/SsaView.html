@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS" />
+	<script type="text/javascript" src="../Player/SsaPlayer.js"></script>
+	<script type="text/javascript" src="./tmp/PackedData.js"></script>
+	
+	<script type="text/javascript">
+	    function doSample() {
+
+	        var a_canvas = document.getElementById("a_canvas");
+	        var ctx = a_canvas.getContext("2d");
+
+	        var imageList = new SsImageList(tmp_images, "./tmp/", true);
+	        var animation = new SsAnimation(tmp_ssa, imageList);
+
+	        var sprite = new SsSprite(animation);
+	        sprite.setLoop(0);
+
+	        var time = 0;
+	        var prevTime = new Date().getTime();
+            var frameCount = 0;
+            var fps = 0;
+
+	        setInterval(function () {
+
+	            var t = new Date().getTime();
+
+	            ctx.save();
+
+	            ctx.clearRect(0, 0, 640, 480);
+	            sprite.draw(ctx, t);
+
+	            ctx.restore();
+
+	            time = new Date().getTime();
+
+	            ++frameCount;
+	            if (time > prevTime + 1000)
+	            {
+	            	prevTime = time;
+					fps = frameCount;
+					frameCount = 0;
+					if (fps > 60) fps = 60;
+				}
+
+	            document.getElementById("dScreen1").innerHTML = "FPS: " + ~~(fps);
+//	            document.getElementById("dScreen1").innerHTML = sprite.getLoopCount();
+	        }, 16);
+
+	    };
+	</script>
+</head>
+
+<body onLoad="doSample()">
+    <div id="dScreen1" style="font-size:24px;"></div>
+	<canvas id="a_canvas" width="640" height="480">
+	</canvas>
+</body>
+
+</html>
