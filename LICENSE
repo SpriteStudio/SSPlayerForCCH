@@ -1,20 +1,24 @@
-The MIT License (MIT)
+■著作権・免責事項
 
-Copyright (c) 2013 SpriteStudio
+・本リポジトリ内のドキュメント、ソースファイル、サンプルプログラムの著作権は株
+  式会社ウェブテクノロジが保有しています。
+  サンプルソースをユーザ様がゲームタイトルなどに組み込んでご利用される場合は
+  必要に応じて改変していただいてかまいません。
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
+・本リポジトリ内のドキュメント、ソースファイル、サンプルプログラムはライセンス
+  フリーで利用できます。本リポジトリ内のドキュメント、ソースファイル、サンプル
+  プログラムは、SpriteStudioのユーザ様がゲームタイトルの開発などで
+  SpriteStudio用のファイルを利用される場合に、自由にお使いいただけます。
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+・本リポジトリ内のドキュメント、ソースファイル、サンプルプログラムを利用したこ
+  とによる直接的あるいは間接的に生じる損失があったとしても、株式会社ウェブテ
+  クノロジはその責を負わないものとします。
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+・本リポジトリ内のドキュメント、ソースファイル、サンプルプログラムの転載・再配
+  布を禁止します。
+
+・本リポジトリ内のドキュメントはアプリケーションプログラム開発経験者向けに書か
+  れています。一般的なプログラム開発の手法等につきましては省略しております。
+
+・お客様が作成されたプログラムの動作に関しましては、サポート対象外とさせてい
+  ただきます。
