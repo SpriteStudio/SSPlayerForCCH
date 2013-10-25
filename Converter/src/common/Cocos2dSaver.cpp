@@ -236,11 +236,18 @@ void writeParts(Context& context, ss::SsMotion::Ptr motion)
 		}
 		
 
-		// ユーザーデータは、ここでまとめて出力する
-        std::vector<SsMotionFrameDecoder::FrameParam>::iterator userDataIncludes =
-			std::find_if(r.begin(), r.end(), SsMotionFrameDecoder::FrameParam::hasUserData);
-		int userDataCount = 0;
-		if (userDataIncludes != r.end())
+		// ユーザーデータが含まれているものだけ抜き出す
+		std::vector<SsMotionFrameDecoder::FrameParam> userDataInc;
+		BOOST_FOREACH( const SsMotionFrameDecoder::FrameParam& v, r )
+		{
+			if (v.udat.value.hasData())
+			{
+				userDataInc.push_back(v);
+			}
+		}
+		
+		// このフレームのユーザーデータを出力する
+		if (!userDataInc.empty())
 		{
 			std::string label = (format("%1%_userData_%2%") % context.prefix % frameNo).str();
 		
@@ -254,18 +261,19 @@ void writeParts(Context& context, ss::SsMotion::Ptr motion)
 				context.bout.setReference(label);
 			}
 
-			for (; userDataIncludes != r.end(); userDataIncludes++)
+			bool first = true;
+			BOOST_FOREACH( const SsMotionFrameDecoder::FrameParam& v, userDataInc )
 			{
 				Indenting _;
 
 				if (context.sourceFormatMode)
 				{
-					if (userDataCount > 0) context.out << "," << std::endl;
+					if (!first) context.out << "," << std::endl;
+					first = false;
 					context.out << indent;
 				}
-				userDataCount++;
 
-				writeUserData(context, *userDataIncludes);
+				writeUserData(context, v);
 			}
 		
 			if (context.sourceFormatMode)
@@ -276,7 +284,7 @@ void writeParts(Context& context, ss::SsMotion::Ptr motion)
 				context.out << std::endl;
 			}
 		}
-		framesUserDataCounts.push_back(userDataCount);
+		framesUserDataCounts.push_back(static_cast<int>(userDataInc.size()));
 
 
         // 非表示のものをリストから削除する
