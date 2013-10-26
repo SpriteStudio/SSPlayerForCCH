@@ -213,7 +213,7 @@ static shared_ptr<SsPart> readPart(const ptree& pt, textenc::Encoding encoding, 
 		optional<int> originX = pt.get_optional<int>("OriginX");
 		optional<int> originY = pt.get_optional<int>("OriginY");
 
-		optional<int> transBlendType = pt.get_optional<int>("TransBlendType");
+		optional<int> transBlendType = pt.get_optional<int>("TransBlendType");	// alpha blend
 		optional<int> inheritType = pt.get_optional<int>("InheritType");
 
 
@@ -235,6 +235,12 @@ static shared_ptr<SsPart> readPart(const ptree& pt, textenc::Encoding encoding, 
 				picAreaTop.get(),
 				picAreaRight.get(),
 				picAreaBottom.get());
+		}
+		if (transBlendType)
+		{
+			int blendType = transBlendType.get();
+			if (blendType < 0 || blendType >= SsPart::EndOfAlphaBlend) blendType = 0;
+			part->alphaBlend = static_cast<SsPart::AlphaBlend>(blendType);
 		}
 		if (originX && originY)
 		{

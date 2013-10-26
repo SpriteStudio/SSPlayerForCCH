@@ -663,6 +663,7 @@ SsPart::SsPart()
 	, parentId(-1)
 	, picId(0)
 	, picArea()
+	, alphaBlend(Mix)
 	, origin()
 	, inheritEach(false)
 {}
@@ -679,6 +680,7 @@ std::string SsPart::toString() const
 	ss << "," << id;
 	ss << "," << parentId;
 	ss << ",pic=" << picId << "," << picArea.toString();
+	ss << ",alphaBlend=" << alphaBlend;
 	ss << ",origin=" << origin.toString();
 	ss << ",inheritEach=" << inheritEach;
 	ss << "]";

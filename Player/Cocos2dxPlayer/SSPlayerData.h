@@ -25,7 +25,7 @@ typedef struct {
 	ss_s16		id;
 	ss_s16		parentId;
 	ss_s16		imageNo;
-	ss_s16		reserved;
+	ss_s16		alphaBlend;
 } SSPartData;
 
 

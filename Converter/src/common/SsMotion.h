@@ -501,6 +501,15 @@ public:
 		PartHitTest,	/**< 当たり判定パーツ */
 		PartSound		/**< サウンドパーツ */
 	};
+	
+	enum AlphaBlend
+	{
+		Mix,			/**< ミックス */
+		Multiplication,	/**< 乗算 */
+		Addition,		/**< 加算 */
+		Subtraction,	/**< 減算 */
+		EndOfAlphaBlend
+	};
 
 	Type			type;
 	std::string		name;
@@ -508,6 +517,7 @@ public:
 	int				parentId;
 	int				picId;
 	SsRect			picArea;
+	AlphaBlend		alphaBlend;
 	SsPoint			origin;
 	bool			inheritEach;
 	SsAttributes	attributes;
@@ -539,16 +549,17 @@ public:
 	bool hasFrame(int frameNo) const;
 	SsAttribute::ConstPtr getAttribute(SsAttributeTag::Tag tag) const;
 
-	bool isRoot() const						{ return _part->type == SsPart::PartRoot; }
-	SsPart::Type getType() const			{ return _part->type; }
-	const std::string& getName() const		{ return _part->name; }
-	int getId() const						{ return _part->id; }
-	int getParentId() const					{ return _part->parentId; }
-	int getPicId() const					{ return _part->picId; }
-	const SsRect& getPicArea() const		{ return _part->picArea; }
-	const SsPoint& getOrigin() const		{ return _part->origin; }
-	bool isInheritEach() const				{ return _part->inheritEach; }
-	int getLastFrameNo() const				{ return _part->attributes.getLastFrameNo(); }
+	bool isRoot() const							{ return _part->type == SsPart::PartRoot; }
+	SsPart::Type getType() const				{ return _part->type; }
+	const std::string& getName() const			{ return _part->name; }
+	int getId() const							{ return _part->id; }
+	int getParentId() const						{ return _part->parentId; }
+	int getPicId() const						{ return _part->picId; }
+	const SsRect& getPicArea() const			{ return _part->picArea; }
+	SsPart::AlphaBlend getAlphaBlend() const	{ return _part->alphaBlend; }
+	const SsPoint& getOrigin() const			{ return _part->origin; }
+	bool isInheritEach() const					{ return _part->inheritEach; }
+	int getLastFrameNo() const					{ return _part->attributes.getLastFrameNo(); }
 
 private:
 	SsNode(SsPart::Ptr part);

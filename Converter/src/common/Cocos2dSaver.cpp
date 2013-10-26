@@ -491,13 +491,14 @@ void writeParts(Context& context, ss::SsMotion::Ptr motion)
 			int id = toCocos2dPartId(node->getId());
 			int parentId = toCocos2dPartId(node->getParentId());
 			int imageNo = node->getPicId();
+			int alphaBlend = node->getAlphaBlend();
 
 			//typedef struct {
 			//	ss_offset	name;
 			//	ss_s16		id;
 			//	ss_s16		parentId;
 			//	ss_s16		imageNo;
-			//	ss_s16		reserved;
+			//	ss_s16		alphaBlend;
 			//} SSPartData;
 
 			if (context.sourceFormatMode)
@@ -506,7 +507,7 @@ void writeParts(Context& context, ss::SsMotion::Ptr motion)
 				context.out << indent;
 				context.out << "{ ";
 				context.out << format("(ss_offset)((char*)%1% - (char*)&%2%)") % label % context.dataBase;
-				context.out << format(", %1%, %2%, %3%") % id % parentId % imageNo;
+				context.out << format(", %1%, %2%, %3%, %4%") % id % parentId % imageNo % alphaBlend;
 				context.out << " }";
 			}
 			else
@@ -515,7 +516,7 @@ void writeParts(Context& context, ss::SsMotion::Ptr motion)
 				context.bout.writeShort(id);
 				context.bout.writeShort(parentId);
 				context.bout.writeShort(imageNo);
-				context.bout.writeShort(0);
+				context.bout.writeShort(alphaBlend);
 			}
 			partCount++;
 		}
