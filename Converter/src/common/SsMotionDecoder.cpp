@@ -583,14 +583,6 @@ bool SsMotionFrameDecoder::FrameParam::priorityComparator(const FrameParam& lhs,
 /** 非表示か判定する */
 bool SsMotionFrameDecoder::FrameParam::isHidden(const FrameParam& r)
 {
-
-	//当り判定パーツとNULLパーツは非表示パーツとした
-	if ( r.node->getType() == ss::SsPart::PartHitTest ||
-		r.node->getType() == ss::SsPart::PartNull )
-	{
-		return true;	//
-	}
-
     return r.hide.value != 0 ;
 }
 
@@ -606,6 +598,19 @@ bool SsMotionFrameDecoder::FrameParam::isRoot(const FrameParam& r)
 	return r.node->isRoot() ;
 }
     
+/** NULLパーツか判定する */
+bool SsMotionFrameDecoder::FrameParam::isNullPart(const FrameParam& r)
+{
+	return r.node->getType() == ss::SsPart::TypeNull;
+}
+
+/** 当たり判定、サウンドパーツか判定する */
+bool SsMotionFrameDecoder::FrameParam::isHitTestOrSoundPart(const FrameParam& r)
+{
+	return r.node->getType() == ss::SsPart::TypeHitTest
+		|| r.node->getType() == ss::SsPart::TypeSound;
+}
+
 /** スケールが０か判定する */
 bool SsMotionFrameDecoder::FrameParam::isScaleZero(const FrameParam& r)
 {

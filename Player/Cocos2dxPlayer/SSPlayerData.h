@@ -12,6 +12,21 @@ typedef int				ss_s32;
 typedef int				ss_offset;
 
 
+typedef enum {
+	kSSPartTypeNormal,
+	kSSPartTypeNull
+} SSPartType;
+
+
+typedef enum {
+	kSSPartAlphaBlendMix,
+	kSSPartAlphaBlendMultiplication,
+	kSSPartAlphaBlendAddition,
+	kSSPartAlphaBlendSubtraction
+} SSPartAlphaBlend;
+
+
+
 typedef struct {
 	ss_offset	partFrameData;
 	ss_offset	userData;
@@ -25,7 +40,9 @@ typedef struct {
 	ss_s16		id;
 	ss_s16		parentId;
 	ss_s16		imageNo;
-	ss_s16		alphaBlend;
+	ss_u16		type;			// enum SSPartType
+	ss_u16		alphaBlend;		// enum SSPartAlphaBlend
+	ss_s16		reserved;
 } SSPartData;
 
 

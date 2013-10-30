@@ -657,13 +657,13 @@ SsAttribute::ConstPtr SsAttributes::getAttribute(SsAttributeTag::Tag tag) const
  */
 
 SsPart::SsPart()
-	: type(PartNormal)
+	: type(TypeNormal)
 	, name()
 	, id(-1)
 	, parentId(-1)
 	, picId(0)
 	, picArea()
-	, alphaBlend(Mix)
+	, alphaBlend(AlphaBlendMix)
 	, origin()
 	, inheritEach(false)
 {}
@@ -707,7 +707,7 @@ SsNode::Ptr SsNode::createNodes(std::vector<SsPart::Ptr>& parts)
 	SsPart::Ptr rootPart;
 	BOOST_FOREACH( SsPart::Ptr& part, parts )
 	{
-		if (part->type == SsPart::PartRoot)
+		if (part->type == SsPart::TypeRoot)
 		{
 			rootPart = part;
 			rootPart->inheritEach = 1;	// 親の継承を参照しない 

@@ -173,6 +173,9 @@ public:
 	{
 		float	x;
 		float	y;
+		float	scaleX;
+		float	scaleY;
+		float	rotation;
 	};
 
 	/** 指定パーツの情報をPartInfoに格納します.

@@ -495,20 +495,20 @@ public:
 
 	enum Type
 	{
-		PartNormal,		/**< 通常パーツ */
-		PartRoot,		/**< ルートパーツ */
-		PartNull,		/**< NULLパーツ */
-		PartHitTest,	/**< 当たり判定パーツ */
-		PartSound		/**< サウンドパーツ */
+		TypeNormal,		/**< 通常パーツ */
+		TypeRoot,		/**< ルートパーツ */
+		TypeNull,		/**< NULLパーツ */
+		TypeHitTest,	/**< 当たり判定パーツ */
+		TypeSound		/**< サウンドパーツ */
 	};
 	
 	enum AlphaBlend
 	{
-		Mix,			/**< ミックス */
-		Multiplication,	/**< 乗算 */
-		Addition,		/**< 加算 */
-		Subtraction,	/**< 減算 */
-		EndOfAlphaBlend
+		AlphaBlendMix,				/**< ミックス */
+		AlphaBlendMultiplication,	/**< 乗算 */
+		AlphaBlendAddition,			/**< 加算 */
+		AlphaBlendSubtraction,		/**< 減算 */
+		NumAlphaBlend
 	};
 
 	Type			type;
@@ -549,7 +549,7 @@ public:
 	bool hasFrame(int frameNo) const;
 	SsAttribute::ConstPtr getAttribute(SsAttributeTag::Tag tag) const;
 
-	bool isRoot() const							{ return _part->type == SsPart::PartRoot; }
+	bool isRoot() const							{ return _part->type == SsPart::TypeRoot; }
 	SsPart::Type getType() const				{ return _part->type; }
 	const std::string& getName() const			{ return _part->name; }
 	int getId() const							{ return _part->id; }

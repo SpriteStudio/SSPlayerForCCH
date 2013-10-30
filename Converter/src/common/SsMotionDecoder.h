@@ -75,6 +75,12 @@ public:
         
         /** ルートパーツか判定する */
         static bool isRoot(const FrameParam& r);
+		
+		/** NULLパーツか判定する */
+		static bool isNullPart(const FrameParam& r);
+		
+		/** 当たり判定、サウンドパーツか判定する */
+		static bool isHitTestOrSoundPart(const FrameParam& r);
         
         /** スケールが０か判定する */
         static bool isScaleZero(const FrameParam& r);

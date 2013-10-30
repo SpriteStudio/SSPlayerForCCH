@@ -178,6 +178,21 @@ ssa: [
 #endif
 
 
+
+
+
+/** 該当するものはデータ出力から省く */
+static bool isRemovePart(const SsMotionFrameDecoder::FrameParam& r)
+{
+	return SsMotionFrameDecoder::FrameParam::isHidden(r)				// 非表示
+		|| SsMotionFrameDecoder::FrameParam::isInvisible(r)				// 完全に透明なパーツ
+		|| SsMotionFrameDecoder::FrameParam::isRoot(r)					// ルートパーツ
+		|| SsMotionFrameDecoder::FrameParam::isHitTestOrSoundPart(r)	// 当たり判定, サウンドパーツ
+		|| SsMotionFrameDecoder::FrameParam::isNullPart(r)				// NULLパーツ
+	;
+}
+
+
 /**
  * 各パーツの情報を出力する 
  */
@@ -224,17 +239,9 @@ void writeParts(std::ostream& out, textenc::Encoding outEncoding, ss::SsMotion::
 		// 優先順位でソート 
 		std::sort(r.begin(), r.end(), SsMotionFrameDecoder::FrameParam::priorityComparator);
 
-        // 非表示のものをリストから削除する
+        // データ出力の必要ないものはリストから削除する
         std::vector<SsMotionFrameDecoder::FrameParam>::iterator removes =
-            std::remove_if(r.begin(), r.end(), SsMotionFrameDecoder::FrameParam::isHidden);
-        r.erase(removes, r.end());
- 
-        // 完全に透明なパーツを除く
-        removes = std::remove_if(r.begin(), r.end(), SsMotionFrameDecoder::FrameParam::isInvisible);
-        r.erase(removes, r.end());
-
-        // ルートパーツを除く
-        removes = std::remove_if(r.begin(), r.end(), SsMotionFrameDecoder::FrameParam::isRoot);
+            std::remove_if(r.begin(), r.end(), isRemovePart);
         r.erase(removes, r.end());
 
         //int partCount = static_cast<int>(r.size());

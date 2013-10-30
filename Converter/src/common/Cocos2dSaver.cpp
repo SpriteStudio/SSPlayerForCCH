@@ -17,11 +17,19 @@ using boost::shared_ptr;
 using boost::format;
 using namespace ss;
 
-// インデントあたりのスペース数 
+// インデントあたりのスペース数
 #define SPACE_OF_INDENT		2
 
 
 namespace {
+
+	static const int		FormatVersion_2 = 2;
+	static const int		FormatVersion_3 = 3;		// 2013/10/30 パーツデータに、パーツタイプ、αブレンド方法を追加
+
+	static const int		CurrentFormatVersion = FormatVersion_3;
+
+
+
 
 	/** 現在のインデント数をカウントするクラス */
 	class Indenting
@@ -60,7 +68,46 @@ namespace {
 		return 1 + id;
 	}
 
+
+	typedef enum {
+		kSSPartTypeNormal,
+		kSSPartTypeNull
+	} SSPartType;
+
+	/** 内部パーツタイプからCocos2d-xプレイヤー用パーツタイプに変換 */
+	static int toCocos2dPartType(SsPart::Type ssPartType)
+	{
+		switch (ssPartType)
+		{
+			case SsPart::TypeNormal: return kSSPartTypeNormal;
+			case SsPart::TypeNull:   return kSSPartTypeNull;
+			default:                 return kSSPartTypeNull;
+		}
+	}
+
+
+	typedef enum {
+		kSSPartAlphaBlendMix,
+		kSSPartAlphaBlendMultiplication,
+		kSSPartAlphaBlendAddition,
+		kSSPartAlphaBlendSubtraction
+	} SSPartAlphaBlend;
+
+	/** 内部パーツαブレンド方法からCocos2d-xプレイヤー用パーツαブレンド方法に変換 */
+	static int toCocos2dPartAlphaBlend(SsPart::AlphaBlend ssPartAlphaBlend)
+	{
+		switch (ssPartAlphaBlend)
+		{
+			case SsPart::AlphaBlendMix:            return kSSPartAlphaBlendMix;
+			case SsPart::AlphaBlendMultiplication: return kSSPartAlphaBlendMultiplication;
+			case SsPart::AlphaBlendAddition:       return kSSPartAlphaBlendAddition;
+			case SsPart::AlphaBlendSubtraction:    return kSSPartAlphaBlendSubtraction;
+			default:                               return kSSPartAlphaBlendMix;
+		}
+	}
+
 }
+
 
 
 enum {
@@ -205,6 +252,18 @@ void Cocos2dSaver::save(
 }
 
 
+
+/** 該当するものはデータ出力から省く */
+static bool isRemovePart(const SsMotionFrameDecoder::FrameParam& r)
+{
+	return SsMotionFrameDecoder::FrameParam::isHidden(r)				// 非表示
+		|| SsMotionFrameDecoder::FrameParam::isInvisible(r)				// 完全に透明なパーツ
+		|| SsMotionFrameDecoder::FrameParam::isRoot(r)					// ルートパーツ
+		|| SsMotionFrameDecoder::FrameParam::isHitTestOrSoundPart(r)	// 当たり判定, サウンドパーツ
+	;
+}
+
+
 /**
  * 各パーツの情報を出力する 
  */
@@ -287,19 +346,11 @@ void writeParts(Context& context, ss::SsMotion::Ptr motion)
 		framesUserDataCounts.push_back(static_cast<int>(userDataInc.size()));
 
 
-        // 非表示のものをリストから削除する
+        // データ出力の必要ないものはリストから削除する
         std::vector<SsMotionFrameDecoder::FrameParam>::iterator removes =
-            std::remove_if(r.begin(), r.end(), SsMotionFrameDecoder::FrameParam::isHidden);
+            std::remove_if(r.begin(), r.end(), isRemovePart);
         r.erase(removes, r.end());
         
-        // 完全に透明なパーツを除く
-        removes = std::remove_if(r.begin(), r.end(), SsMotionFrameDecoder::FrameParam::isInvisible);
-        r.erase(removes, r.end());
-        
-        // ルートパーツを除く
-        removes = std::remove_if(r.begin(), r.end(), SsMotionFrameDecoder::FrameParam::isRoot);
-        r.erase(removes, r.end());
-
 		int partCount = static_cast<int>(r.size());
 		framesPartCounts.push_back(partCount);
 
@@ -491,14 +542,17 @@ void writeParts(Context& context, ss::SsMotion::Ptr motion)
 			int id = toCocos2dPartId(node->getId());
 			int parentId = toCocos2dPartId(node->getParentId());
 			int imageNo = node->getPicId();
-			int alphaBlend = node->getAlphaBlend();
+			int type = toCocos2dPartType(node->getType());
+			int alphaBlend = toCocos2dPartAlphaBlend(node->getAlphaBlend());
 
 			//typedef struct {
 			//	ss_offset	name;
 			//	ss_s16		id;
 			//	ss_s16		parentId;
 			//	ss_s16		imageNo;
-			//	ss_s16		alphaBlend;
+			//	ss_u16		type;			// enum SSPartType
+			//	ss_u16		alphaBlend;		// enum SSPartAlphaBlend
+			//	ss_s16		reserved;
 			//} SSPartData;
 
 			if (context.sourceFormatMode)
@@ -507,7 +561,7 @@ void writeParts(Context& context, ss::SsMotion::Ptr motion)
 				context.out << indent;
 				context.out << "{ ";
 				context.out << format("(ss_offset)((char*)%1% - (char*)&%2%)") % label % context.dataBase;
-				context.out << format(", %1%, %2%, %3%, %4%") % id % parentId % imageNo % alphaBlend;
+				context.out << format(", %1%, %2%, %3%, %4%, %5%") % id % parentId % imageNo % type % alphaBlend;
 				context.out << " }";
 			}
 			else
@@ -516,7 +570,9 @@ void writeParts(Context& context, ss::SsMotion::Ptr motion)
 				context.bout.writeShort(id);
 				context.bout.writeShort(parentId);
 				context.bout.writeShort(imageNo);
+				context.bout.writeShort(type);
 				context.bout.writeShort(alphaBlend);
+				context.bout.writeShort(0);
 			}
 			partCount++;
 		}
@@ -531,7 +587,7 @@ void writeParts(Context& context, ss::SsMotion::Ptr motion)
 
 
 	// すべての情報を束ねるデータ本体 
-	const unsigned int version = 2;
+	const unsigned int version = FormatVersion_3;
 
 	const unsigned int id0 = 0xffffffff;
 	const unsigned int id1 = toId("SSBA");

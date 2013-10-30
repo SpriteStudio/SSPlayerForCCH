@@ -217,7 +217,15 @@ static shared_ptr<SsPart> readPart(const ptree& pt, textenc::Encoding encoding, 
 		optional<int> inheritType = pt.get_optional<int>("InheritType");
 
 
-		part->type = static_cast<SsPart::Type>(type.get());
+		// Rootアトリビュートが1のときはRootパーツとして扱う
+		if (root && root.get() == 1)
+		{
+			part->type = SsPart::TypeRoot;
+		}
+		else
+		{
+			part->type = static_cast<SsPart::Type>(type.get());
+		}
 
 		if (name)
 		{
@@ -239,7 +247,7 @@ static shared_ptr<SsPart> readPart(const ptree& pt, textenc::Encoding encoding, 
 		if (transBlendType)
 		{
 			int blendType = transBlendType.get();
-			if (blendType < 0 || blendType >= SsPart::EndOfAlphaBlend) blendType = 0;
+			if (blendType < 0 || blendType >= SsPart::NumAlphaBlend) blendType = 0;
 			part->alphaBlend = static_cast<SsPart::AlphaBlend>(blendType);
 		}
 		if (originX && originY)

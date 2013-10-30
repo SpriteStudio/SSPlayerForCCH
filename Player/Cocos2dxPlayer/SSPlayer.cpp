@@ -343,18 +343,24 @@ public:
 	SSPartState();
 	virtual ~SSPartState();
 
-	float getPositionX() const;
-	float getPositionY() const;
+	void copyParameters(SSPlayer::PartState& state) const;
 
 private:
 	friend class SSPlayer;
 
 	float	m_x;
 	float	m_y;
+	float	m_scaleX;
+	float	m_scaleY;
+	float	m_rotation;
 };
 
 SSPartState::SSPartState()
-	: m_x(0), m_y(0)
+	: m_x(0)
+	, m_y(0)
+	, m_scaleX(1.0f)
+	, m_scaleY(1.0f)
+	, m_rotation(0.0f)
 {
 	this->autorelease();
 }
@@ -363,16 +369,14 @@ SSPartState::~SSPartState()
 {
 }
 
-float SSPartState::getPositionX() const
+void SSPartState::copyParameters(SSPlayer::PartState& state) const
 {
-	return m_x;
+	state.x = m_x;
+	state.y = m_y;
+	state.scaleX = m_scaleX;
+	state.scaleY = m_scaleY;
+	state.rotation = m_rotation;
 }
-
-float SSPartState::getPositionY() const
-{
-	return m_y;
-}
-
 
 
 
@@ -768,8 +772,7 @@ bool SSPlayer::getPartState(SSPlayer::PartState& result, const char* name)
 		if (index >= 0 && index < static_cast<int>(m_partStates.count()))
 		{
 			const SSPartState* partState = static_cast<SSPartState*>( m_partStates.objectAtIndex(index) );
-			result.x = partState->getPositionX();
-			result.y = partState->getPositionY();
+			partState->copyParameters(result);
 			return true;
 		}
 	}
@@ -810,7 +813,10 @@ void SSPlayer::setFrame(int frameNo)
 		#endif
 
 		SSPartState* partState = static_cast<SSPartState*>( m_partStates.objectAtIndex(partNo) );
-		size_t imageNo = m_ssDataHandle->getPartData()[partNo].imageNo;
+		// パーツの基本情報を取得
+		const SSPartData* partData = &m_ssDataHandle->getPartData()[partNo];
+		size_t imageNo = partData->imageNo;
+		SSPartType partType = static_cast<SSPartType>(partData->type);
 
 
 		CCTexture2D* tex = m_imageList->getTexture(imageNo);
@@ -908,10 +914,16 @@ void SSPlayer::setFrame(int frameNo)
 			}
 		}
 
-		sprite->setVisible(true);
+		// Normalパーツのみ実際に表示する
+		bool visibled = partType == kSSPartTypeNormal;
+		sprite->setVisible(visibled);
 
+		// この時点の座標、スケール値などを記録しておく
 		partState->m_x = sprite->getPositionX();
 		partState->m_y = sprite->getPositionY();
+		partState->m_scaleX = sprite->getScaleX();
+		partState->m_scaleY = sprite->getScaleY();
+		partState->m_rotation = sprite->getRotation();
 	}
 }
 
