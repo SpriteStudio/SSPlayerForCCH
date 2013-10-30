@@ -220,13 +220,16 @@ void Cocos2dSaver::save(
 	textenc::Encoding outEncoding,
 	ss::SsMotion::Ptr motion, 
 	ss::SsImageList::ConstPtr optImageList, 
-	const std::string& prefixLabel)
+	const std::string& prefixLabel,
+	const std::string& creatorComment)
 {
 	Context context(out, binaryFormatMode, outEncoding, prefixLabel);
 	
 	// データ起点
 	if (context.sourceFormatMode)
 	{
+		// creator情報埋め込み
+		context.out << format("// %1%") % creatorComment << std::endl;
 		context.out << format("extern SSData %1%;") % context.dataBase << std::endl;
 		context.out << std::endl;
 	}
@@ -234,6 +237,9 @@ void Cocos2dSaver::save(
 	{
 		// ヘッダー部を予約しておく
 		context.bout.fill(0, 64);
+		// creator情報埋め込み
+		context.bout.writeString(creatorComment);
+		context.bout.align(64);
 	}
 
 	// 画像ソースの出力

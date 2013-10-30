@@ -15,7 +15,9 @@ struct Cocos2dSaver
 		textenc::Encoding outEncoding,
 		ss::SsMotion::Ptr motion,
 		ss::SsImageList::ConstPtr optImageList,
-		const std::string& prefixLabel);
+		const std::string& prefixLabel,
+		const std::string& creatorComment
+		);
 };
 
 #endif	// ifndef _COCOS2D_SAVER_H_

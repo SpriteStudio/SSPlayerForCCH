@@ -29,6 +29,7 @@ public:
 
 	void seekp(long pos);
 	void fill(char fillData, size_t size);
+	void align(int n);
 
 	void fixReferences();
 	void writeReference(const std::string& key);
@@ -41,8 +42,6 @@ public:
 	void writeString(const std::string& str);
 
 private:
-	void align(int n);
-
 	std::ostream&		_out;
 	EndiannessType		_endianness;
 	ReferenceMapType	_referenceMap;

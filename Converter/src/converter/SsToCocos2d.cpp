@@ -9,6 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/format.hpp>
 
 #include "SsaxLoader.h"
 #include "SsfLoader.h"
@@ -172,7 +173,8 @@ SsPlayerConverterResultCode ssaxToCocos2d(std::ostream& out, bool binaryFormatMo
 	}
 
 	std::string prefix = ssaxPath.stem().generic_string();
-	Cocos2dSaver::save(out, binaryFormatMode, outEncoding, motion, imageList, prefix);
+	std::string comment = (boost::format("Created by %1% v%2%") % APP_NAME % APP_VERSION).str();
+	Cocos2dSaver::save(out, binaryFormatMode, outEncoding, motion, imageList, prefix, comment);
 
     return SSPC_SUCCESS;
 }
