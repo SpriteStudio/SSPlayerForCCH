@@ -17,6 +17,8 @@ std::string toString(int value)
 /** 浮動小数点を短い文字列で返す */
 std::string toShortString(float value)
 {
+	if (value == -0.0f) value = 0.0f;
+
 	std::stringstream ss;
 	double i;
 	double d = std::modf(value, &i);

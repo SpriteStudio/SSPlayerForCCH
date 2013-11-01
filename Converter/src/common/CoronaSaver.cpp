@@ -504,8 +504,7 @@ static void writeFrameParam(std::ostream& out, const SsMotionFrameDecoder::Frame
 	// 以降、省略可能パラメータ
 	params.addInt(origin.x, 0);
 	params.addInt(origin.y, 0);
-//	params.addInt(static_cast<int>(angle), 0);
-	params.addFloat(angle, 1.0f);
+	params.addFloat(angle, 0.0f);
 	params.addFloat(param.scax.value, 1.0f);
 	params.addFloat(param.scay.value, 1.0f);
 	params.addFloat(param.tran.value, 1.0f);
