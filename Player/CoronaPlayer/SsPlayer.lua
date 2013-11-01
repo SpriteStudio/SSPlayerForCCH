@@ -237,7 +237,7 @@ SsObject.new = function(player, animation, initParams)
 		self.loopCount = 0
 		
 		if initParams ~= nil then
-			if initParams.isPlaying then self.isPlaying = initParams.isPlaying end
+			if initParams.isPlaying ~= nil then self.isPlaying = initParams.isPlaying end
 			if initParams.frame then self.frame = initParams.frame end
 			if initParams.loop then self.loop = initParams.loop end
 			if initParams.timeScale then self.timeScale = initParams.timeScale end
