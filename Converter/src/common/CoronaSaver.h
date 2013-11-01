@@ -21,7 +21,7 @@ public:
 	};
 
 	/** constructor */
-	CoronaSaver(std::ostream& out, textenc::Encoding outEncoding, const Options& options);
+	CoronaSaver(std::ostream& out, textenc::Encoding outEncoding, const Options& options, const std::string& creatorComment);
 
 	/** destructor */
 	~CoronaSaver();

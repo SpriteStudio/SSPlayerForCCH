@@ -9,6 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/format.hpp>
 
 #include "SsaxLoader.h"
 #include "SsfLoader.h"
@@ -108,6 +109,8 @@ extern "C" int Converter_SsToCorona(int argc, const char *argv[])
             ssfPath = ssfImageListMap.begin()->first;
         }
 
+		std::string comment = (boost::format("Created by %1% v%2%") % APP_NAME % APP_VERSION).str();
+
         CoronaSaver::Options outOptions;
         SsPlayerConverterResultCode resultCode = SSPC_SUCCESS;
 
@@ -128,7 +131,7 @@ extern "C" int Converter_SsToCorona(int argc, const char *argv[])
                 std::ofstream out(outPath.generic_string().c_str());
                 textenc::writeBom(out, options->outFileEncoding);
                 
-                CoronaSaver saver(out, options->outFileEncoding, outOptions);
+                CoronaSaver saver(out, options->outFileEncoding, outOptions, comment);
                 
                 // prefix
                 std::string prefix = ssaxPath.stem().generic_string();
@@ -162,7 +165,7 @@ extern "C" int Converter_SsToCorona(int argc, const char *argv[])
             std::ofstream out(options->outFilePath.generic_string().c_str());
             textenc::writeBom(out, options->outFileEncoding);
 
-            CoronaSaver saver(out, options->outFileEncoding, outOptions);
+            CoronaSaver saver(out, options->outFileEncoding, outOptions, comment);
 
             BOOST_FOREACH( const fs::path& ssaxPath, options->ssaxList )
             {

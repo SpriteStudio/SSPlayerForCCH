@@ -142,12 +142,14 @@ static void writeImageRectList(std::ostream& out, const ImageRectList& imageRect
  * CoronaSaver
  */
 
-CoronaSaver::CoronaSaver(std::ostream& out, textenc::Encoding outEncoding, const Options& options)
+CoronaSaver::CoronaSaver(std::ostream& out, textenc::Encoding outEncoding, const Options& options, const std::string& creatorComment)
 	: _out(out)
 	, _outEncoding(outEncoding)
 	, _options(options)
 	, _blockWritten(false)
 {
+	// creator情報埋め込み
+	out << "-- " << creatorComment << std::endl;
 }
 
 CoronaSaver::~CoronaSaver()
