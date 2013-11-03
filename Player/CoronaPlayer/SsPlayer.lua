@@ -252,12 +252,13 @@ SsObject.new = function(player, animation, initParams)
 	obj.clearAnimation = function(self)
 		if self:hasAnimation() == false then return end
 	
-		for i = self.numChildren, 1, -1 do
-			self:remove(i);
-		end
-		
-		for i = 1, #self.m.parts do
+		for i = #self.m.parts, 1, -1 do
+			local pm = self.m.parts[i]
+			for j = pm.numChildren, 1, -1 do
+				pm[j]:removeSelf()
+			end
 			table.remove(self.m.parts)
+			pm:removeSelf()
 		end
 
 		self.m.animation = nil
