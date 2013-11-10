@@ -110,6 +110,17 @@ function SsInternalFunc.setPartParams(part, animation, frame, index,obj)
 
 end
 
+function SsInternalFunc.getBlendMode(ssBlendMode)
+	-- assign blendMode from specified value in SS
+	local blendMode = "normal"
+	if     ssBlendMode == "mix" then blendMode = "normal"
+	elseif ssBlendMode == "add" then blendMode = "add"
+	elseif ssBlendMode == "mul" then blendMode = "multiply"
+	elseif ssBlendMode == "sub" then blendMode = "screen"
+	end
+	return blendMode
+end
+
 
 ------------------------------------------------
 -- SsObjectFrameUpdater
@@ -219,9 +230,11 @@ SsObject.new = function(player, animation, initParams)
 			local parts = {}
 			for i, part in ipairs(animation.parts) do
 				local index = 1 + part.imageNo
+				local blendMode = SsInternalFunc.getBlendMode(part.blendMode)
 				local pm = display.newGroup()
 				if imageSheets[index].imageSheet ~= nil then
 					local ps = display.newSprite( imageSheets[index].imageSheet, imageSheets[index].sequenceData )
+					ps.blendMode = blendMode
 					pm:insert(ps)
 				end
 				pm.isVisible = false;

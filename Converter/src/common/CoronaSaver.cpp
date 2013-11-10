@@ -213,6 +213,18 @@ void CoronaSaver::writeAnimation(
 
 
 
+static std::string toBlendModeString(ss::SsPart::AlphaBlend partBlendMode)
+{
+	switch (partBlendMode)
+	{
+		case ss::SsPart::AlphaBlendAddition:		return "add";
+		case ss::SsPart::AlphaBlendMultiplication:	return "mul";
+		case ss::SsPart::AlphaBlendSubtraction:		return "sub";
+		case ss::SsPart::AlphaBlendMix:
+		default:									return "mix";
+	}
+}
+
 static std::string getPartNameList(ss::SsMotion::ConstPtr motion, textenc::Encoding outEncoding, const char* qt)
 {
 	// ノードをフラットな構造で得る 
@@ -224,7 +236,8 @@ static std::string getPartNameList(ss::SsMotion::ConstPtr motion, textenc::Encod
 	{
 		std::string encName = textenc::convert(node->getName(), textenc::SHIFT_JIS, outEncoding);
 		if (partCount > 0) ss << ", ";
-		ss << format("{ name = %1%%2%%1%, imageNo = %3% }") % qt % encName % node->getPicId();
+		std::string blendMode = toBlendModeString(node->getAlphaBlend());
+		ss << format("{ name=%1%%2%%1%, imageNo=%3%, blendMode=%1%%4%%1% }") % qt % encName % node->getPicId() % blendMode;
 		partCount++;
 	}
 	return ss.str();
