@@ -113,6 +113,7 @@ namespace {
 enum {
 	SS_DATA_FLAG_USE_VERTEX_OFFSET	= 1 << 0,
 	SS_DATA_FLAG_USE_COLOR_BLEND	= 1 << 1,
+	SS_DATA_FLAG_USE_ALPHA_BLEND	= 1 << 2,
 
 	NUM_SS_DATA_FLAGS
 };
@@ -550,6 +551,11 @@ void writeParts(Context& context, ss::SsMotion::Ptr motion)
 			int imageNo = node->getPicId();
 			int type = toCocos2dPartType(node->getType());
 			int alphaBlend = toCocos2dPartAlphaBlend(node->getAlphaBlend());
+			
+			if (alphaBlend != kSSPartAlphaBlendMix)
+			{
+				ssDataFlags |= SS_DATA_FLAG_USE_ALPHA_BLEND;
+			}
 
 			//typedef struct {
 			//	ss_offset	name;

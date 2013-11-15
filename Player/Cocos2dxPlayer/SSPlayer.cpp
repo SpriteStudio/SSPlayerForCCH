@@ -464,6 +464,7 @@ public:
 enum {
 	SS_DATA_FLAG_USE_VERTEX_OFFSET	= 1 << 0,
 	SS_DATA_FLAG_USE_COLOR_BLEND	= 1 << 1,
+	SS_DATA_FLAG_USE_ALPHA_BLEND	= 1 << 2,
 
 	NUM_SS_DATA_FLAGS
 };
@@ -817,8 +818,8 @@ void SSPlayer::setFrame(int frameNo)
 {
 	setChildVisibleAll(false);
 
-	// カラーブレンド、頂点変形が必要なものはバッチノードを使わず描画する
-	bool useCustomSprite = (m_ssDataHandle->getFlags() & (SS_DATA_FLAG_USE_COLOR_BLEND | SS_DATA_FLAG_USE_VERTEX_OFFSET)) != 0;
+	// αブレンドでmix以外を使用、カラーブレンド、頂点変形が必要なものはバッチノードを使わず描画する
+	bool useCustomSprite = (m_ssDataHandle->getFlags() & (SS_DATA_FLAG_USE_ALPHA_BLEND | SS_DATA_FLAG_USE_COLOR_BLEND | SS_DATA_FLAG_USE_VERTEX_OFFSET)) != 0;
 	// カラーブレンドはカスタムシェーダーを使用する
 	bool useCustomShaderProgram = (m_ssDataHandle->getFlags() & SS_DATA_FLAG_USE_COLOR_BLEND) != 0;
 
@@ -945,6 +946,23 @@ void SSPlayer::setFrame(int frameNo)
 #endif
 				sprite->setTexture(tex);
 			}
+
+			//
+			// ブレンド方法を設定
+			// 直前のsetTexture()の呼び出しでBlendFuncにはCococs2d-x標準値が設定されます
+			// 標準状態でMIXブレンド相当になります
+			// BlendFuncの値を変更することでブレンド方法を切り替えます
+			//
+			ccBlendFunc blendFunc = sprite->getBlendFunc();
+			// カスタムシェーダを使用する場合
+			if (useCustomShaderProgram) {
+				blendFunc.src = GL_SRC_ALPHA;
+			}
+			// 加算ブレンド
+			if (partData->alphaBlend == kSSPartAlphaBlendAddition) {
+				blendFunc.dst = GL_ONE;
+			}
+			sprite->setBlendFunc(blendFunc);
 		}
 
 		sprite->setTextureRect(CCRect(sx, sy, sw, sh));
@@ -1311,8 +1329,7 @@ void SSSprite::draw(void)
 
     CC_NODE_DRAW_SETUP();
 
-    //ccGLBlendFunc( m_sBlendFunc.src, m_sBlendFunc.dst );
-    ccGLBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+    ccGLBlendFunc( m_sBlendFunc.src, m_sBlendFunc.dst );
 
     if (m_pobTexture != NULL)
     {
