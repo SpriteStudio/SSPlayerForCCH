@@ -6,6 +6,42 @@
 
 using namespace cocos2d;
 
+/*BatchNode使用改変説明
+
+例えば次のようなパーツを持つアニメーションデータについて、
+ 0 : a.png
+ 1 : a.png
+ 2 : a.png
+ 3 : b.png
+ 4 : b.png
+ 5 : a.png
+ 6 : b.png
+ 
+ SSPlayerに次のような構造のオブジェクトを生成し、描画を行う
+ 
+ SSPlayer
+  ├0:CCSpriteBatchNode(テクスチャa.pngをターゲット）
+  │　├0:CCSprite(0番目のパーツを描画）
+  │　├1:CCSprite(1番目のパーツを描画）
+  │　└2:CCSprite(2番目のパーツを描画）
+  ├1:CCSpriteBatchNode(テクスチャb.pngをターゲット）
+  │　├0:CCSprite(3番目のパーツを描画）
+  │　└1:CCSprite(4番目のパーツを描画）
+  └2:CCSpriteBatchNode(テクスチャa.pngをターゲット）
+  	　├0:CCSprite(5番目のパーツを描画）
+  	　└1:CCSprite(6番目のパーツを描画）
+ 
+ 0-2番目、3-4番目、5-6番目はそれぞれBatchNodeでまとめて描画されるため、
+ 高速に描画することが可能になる。
+ 0-2番目を描画しているバッチノードで5-6番目のテクスチャを描画してしまうと、
+ 表示順序が変わってしまい正しく表示できなくなってしまうため、
+ 別々のBatchNodeが必要になる。
+ 
+ 別々のテクスチャを使用したパーツが交互に重なるアニメーションの場合効果は無いが、
+ 同じテクスチャを使用しているパーツには効果大となる。
+ 
+**/
+
 
 // 独自Spriteクラスの使用可否定義
 // 本プレイヤーでは、カラーブレンドと頂点変形を実装するためCCSpriteを継承した一部独自実装のクラスを使用しています。
@@ -542,25 +578,21 @@ bool SSPlayer::init()
 
 void SSPlayer::allocParts(int numParts, bool useCustomShaderProgram)
 {
+	//BatchNodeの数はパーツ数ではなく、構造によって変わってくるので、setFrameメソッドで動的に行う
+	//ここではインスタンスは生成せず、削除のみを行う
+	//パーツ数が同じでも構造が違えばBatchNodeの数は変わってくるので、
+	//以前のパーツ数に関わらず子要素を全て削除する
+	this->removeAllChildrenWithCleanup(true);
 	if (m_partStates.count() != numParts)
 	{
 		// 既存パーツ解放
 		// release old parts.
-		releaseParts();
+		m_partStates.removeAllObjects();
 
-		// パーツ数だけCCSpriteとSSPartStateを作成する
-		// create CCSprite objects and SSPartState objects.
+		// パーツ数だけSPartStateを作成する
+		// create SSPartState objects.
 		for (int i = 0; i < numParts; i++)
 		{
-			#if USE_CUSTOM_SPRITE
-			SSSprite* pSprite = SSSprite::create();
-			pSprite->changeShaderProgram(useCustomShaderProgram);
-			#else
-			CCSprite* pSprite = CCSprite::create();
-			#endif
-			
-			this->addChild(pSprite);
-
 			SSPartState* state = new SSPartState();
 			m_partStates.addObject(state);
 		}
@@ -596,6 +628,7 @@ void SSPlayer::setAnimation(const SSData* ssData, SSImageList* imageList)
 	CCAssert(ssData != NULL, "zero is ssData pointer");
 	CCAssert(imageList != NULL, "zero is imageList pointer");
 
+	this->unscheduleUpdate();//既存のSSPlayerに別のSSDataを読みこませようとすると落ちるので追加
 	clearAnimation();
 
 	SSDataHandle* dataHandle = new SSDataHandle(ssData);
@@ -784,9 +817,16 @@ void SSPlayer::setFrame(int frameNo)
 {
 	setChildVisibleAll(false);
 
+	// カラーブレンド、頂点変形が必要なものはバッチノードを使わず描画する
+	bool useCustomSprite = (m_ssDataHandle->getFlags() & (SS_DATA_FLAG_USE_COLOR_BLEND | SS_DATA_FLAG_USE_VERTEX_OFFSET)) != 0;
+	// カラーブレンドはカスタムシェーダーを使用する
+	bool useCustomShaderProgram = (m_ssDataHandle->getFlags() & SS_DATA_FLAG_USE_COLOR_BLEND) != 0;
+
 	const SSFrameData* frameData = &(m_ssDataHandle->getFrameData()[frameNo]);
 	size_t numParts = static_cast<size_t>(frameData->numParts);
 	SSDataReader r( static_cast<const ss_u16*>( m_ssDataHandle->getAddress(frameData->partFrameData)) );
+	int nodeIndex = 0;//SSPlayerの子要素のCCSpriteBatchNodeのインデックス
+	int spriteIndex = 0;//CCSpriteBatchNodeの子要素のスプライトのIndex
 	for (size_t i = 0; i < numParts; i++)
 	{
 		unsigned int flags = r.readU32();
@@ -806,26 +846,110 @@ void SSPlayer::setFrame(int frameNo)
 		float scaleY = (flags & SS_PART_FLAG_SCALE_Y) ? r.readFloat() : 1.0f;
 		int opacity = (flags & SS_PART_FLAG_OPACITY) ? r.readU16() : 255;
 	
-		#if USE_CUSTOM_SPRITE
-		SSSprite* sprite = static_cast<SSSprite*>( m_pChildren->objectAtIndex(i) );
-		#else
-		CCSprite* sprite = static_cast<CCSprite*>( m_pChildren->objectAtIndex(i) );
-		#endif
-
 		SSPartState* partState = static_cast<SSPartState*>( m_partStates.objectAtIndex(partNo) );
 		// パーツの基本情報を取得
 		const SSPartData* partData = &m_ssDataHandle->getPartData()[partNo];
 		size_t imageNo = partData->imageNo;
+		CCTexture2D* tex = m_imageList->getTexture(imageNo);//このパーツの描画に使用するテクスチャ
+		if(!tex){ continue; }
 		SSPartType partType = static_cast<SSPartType>(partData->type);
 
+		#if USE_CUSTOM_SPRITE
+		SSSprite* sprite;
+		#else
+		CCSprite* sprite;
+		#endif
 
-		CCTexture2D* tex = m_imageList->getTexture(imageNo);
-        if (tex == NULL) continue;
-		sprite->setTexture(tex);
+		//SSPlayerの子要素数を取得。m_pChildrenは遅延生成されるためNULLチェック必須
+		int childrenCount;
+		if( m_pChildren ){ childrenCount = m_pChildren->count(); } else { childrenCount =  0; }
+
+		if (!useCustomSprite)
+		{
+			//-------------------------------------------------------------
+			//texと同じテクスチャを持っているバッチノードを探す
+			//-------------------------------------------------------------
+			CCSpriteBatchNode* node = NULL;//描画に使用するバッチノード
+			if( nodeIndex < childrenCount ){
+				//nodeIndexが指しているバッチノードが存在する
+				//texと同じテクスチャを持っているか調べる
+				node = static_cast<CCSpriteBatchNode*>( getChildren()->objectAtIndex(nodeIndex) );
+				if( node->getTexture() != tex ){
+					//描画したいテクスチャと同じテクスチャを持つバッチノードを順に検索する
+					spriteIndex = 0;//バッチノードが変わるのでスプライトのインデックスを初期化
+					do{
+						++nodeIndex;
+						if( nodeIndex == childrenCount ){
+							//texを使用するバッチノードは見つからなかった
+							node = NULL;
+							break; 
+						}
+						//SSPlayerの子要素には全てCCSpriteBatchNodeがセットされているので、キャストして順に検索する
+						node = static_cast<CCSpriteBatchNode*>( getChildren()->objectAtIndex(nodeIndex));
+					}while(node->getTexture() != tex );
+				}
+			}
+			
+			//描画したいテクスチャを持つバッチノードが見つからなかった
+			//子要素の最後尾に新しくバッチノードを作成し、追加する
+			if( !node ){
+				node = CCSpriteBatchNode::createWithTexture(tex);
+				addChild(node);
+			}
+			
+			//使用するバッチノードが決まったので表示状態にする
+			node->setVisible(true);
+			
+			//このバッチノードの子要素の未使用スプライトを取得する
+			//未使用スプライトが足りない場合は新規作成する
+			CCArray* aNodeChildren = node->getChildren();
+			int nodeChildrenCount;
+			if( aNodeChildren ){ nodeChildrenCount = aNodeChildren->count(); } else { nodeChildrenCount =  0; }
+			if( nodeChildrenCount == spriteIndex ){
+				//スプライトの数が足りないのでバッチノードの子要素として新しく作成する
+#if USE_CUSTOM_SPRITE
+				sprite =  SSSprite::create();
+				sprite->setTexture(node->getTexture());
+				sprite->changeShaderProgram(useCustomShaderProgram);
+#else
+				sprite = CCSprite::createWithTexture(tex);
+#endif
+				node->addChild(sprite);
+			} else {
+				//バッチノードの子要素のスプライトの数は足りているので、未使用のスプライトを描画に使用する
+#if USE_CUSTOM_SPRITE
+				sprite = static_cast<SSSprite*>( node->getChildren()->objectAtIndex( spriteIndex ) );
+#else
+				sprite = static_cast<CCSprite*>( node->getChildren()->objectAtIndex( spriteIndex ) );
+#endif
+			}
+			//このノードの子要素のspiretIndex番目のスプライトは使用済みなので、インデックスをインクリメントする
+			++spriteIndex;
+		}
+		else {
+			// バッチノードを使わず描画
+			if (childrenCount <= i) {
+#if USE_CUSTOM_SPRITE
+				sprite =  SSSprite::create();
+				sprite->setTexture(tex);
+				sprite->changeShaderProgram(useCustomShaderProgram);
+#else
+				sprite = CCSprite::createWithTexture(tex);
+#endif
+				addChild(sprite);
+			} else {
+#if USE_CUSTOM_SPRITE
+				sprite = static_cast<SSSprite*>( m_pChildren->objectAtIndex(i) );
+#else
+				sprite = static_cast<CCSprite*>( m_pChildren->objectAtIndex(i) );
+#endif
+			}
+		}
+
 		sprite->setTextureRect(CCRect(sx, sy, sw, sh));
 
 		sprite->setOpacity( opacity );
-
+		
 		float ax = (float)ox / (float)sw;
 		float ay = (float)oy / (float)sh;
 		sprite->setAnchorPoint(ccp(ax, ay));
@@ -955,11 +1079,16 @@ void SSPlayer::setScaleY(float fScaleY)
 
 void SSPlayer::setChildVisibleAll(bool visible)
 {
-    CCObject* child;
-    CCARRAY_FOREACH(m_pChildren, child)
-	{
-		CCNode* node = static_cast<CCNode*>(child);
-		node->setVisible(visible);
+	//SSPlayerの子要素のバッチノードと、バッチノードの子要素のCCSpriteのVisibleを全てセットする
+	CCArray* a = getChildren();
+	int pn = getChildrenCount();
+	for( int i = 0; i < pn; ++i){
+		CCNode* nodep = static_cast<CCNode*>( a->objectAtIndex(i));
+		nodep->setVisible(visible);
+		int pc = nodep->getChildrenCount();
+		for( int j = 0; j < pc; ++j){
+			static_cast<CCNode*>( nodep->getChildren()->objectAtIndex(j))->setVisible(visible);
+		}
 	}
 }
 
