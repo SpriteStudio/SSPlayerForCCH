@@ -931,8 +931,8 @@ void SSPlayer::setFrame(int frameNo)
 			if (childrenCount <= i) {
 #if USE_CUSTOM_SPRITE
 				sprite =  SSSprite::create();
-				sprite->setTexture(tex);
 				sprite->changeShaderProgram(useCustomShaderProgram);
+				sprite->setTexture(tex);
 #else
 				sprite = CCSprite::createWithTexture(tex);
 #endif
@@ -943,6 +943,7 @@ void SSPlayer::setFrame(int frameNo)
 #else
 				sprite = static_cast<CCSprite*>( m_pChildren->objectAtIndex(i) );
 #endif
+				sprite->setTexture(tex);
 			}
 		}
 
