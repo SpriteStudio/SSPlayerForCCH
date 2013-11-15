@@ -30,7 +30,7 @@ using boost::shared_ptr;
 
 
 static const char* APP_NAME		= "SsToHtml5";
-static const char* APP_VERSION	= "0.8.13";
+static const char* APP_VERSION	= "1.0";
 
 
 /** 使用方法を出力 */
