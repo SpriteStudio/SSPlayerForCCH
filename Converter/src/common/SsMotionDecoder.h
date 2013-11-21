@@ -91,8 +91,14 @@ public:
 
 	/** キーフレームタイムラインからフレームの補間値を返す */
 	static float decode(SsAttribute::ConstPtr attribute, int frameNo);
+	
+	
+	enum InheritCalcuationType {
+		InheritCalcuation_NotCalculate,	/**< 継承計算は行わない */
+		InheritCalcuation_Calculate		/**< 親のパラメータを継承した計算を行う */
+	};
 
-	static void decodeNodes(std::vector<FrameParam>& paramList, SsMotion::ConstPtr motion, int frameNo, bool isRootOrigin = false);
+	static void decodeNodes(std::vector<FrameParam>& paramList, SsMotion::ConstPtr motion, int frameNo, InheritCalcuationType inheritCalcuation, bool isRootOrigin = false);
 };
 
 }

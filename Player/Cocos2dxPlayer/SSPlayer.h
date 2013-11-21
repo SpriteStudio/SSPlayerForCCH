@@ -176,6 +176,7 @@ public:
 		float	scaleX;
 		float	scaleY;
 		float	rotation;
+		cocos2d::CCSprite* sprite;
 	};
 
 	/** 指定パーツの情報をPartInfoに格納します.

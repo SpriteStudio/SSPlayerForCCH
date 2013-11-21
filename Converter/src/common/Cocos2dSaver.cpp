@@ -25,8 +25,9 @@ namespace {
 
 	static const int		FormatVersion_2 = 2;
 	static const int		FormatVersion_3 = 3;		// 2013/10/30 パーツデータに、パーツタイプ、αブレンド方法を追加
+	static const int		FormatVersion_4 = 4;		// 2013/11/21 Cocos2d-xでアフィン変換を行うための情報を追加
 
-	static const int		CurrentFormatVersion = FormatVersion_3;
+	static const int		CurrentFormatVersion = FormatVersion_4;
 
 
 
@@ -114,6 +115,7 @@ enum {
 	SS_DATA_FLAG_USE_VERTEX_OFFSET	= 1 << 0,
 	SS_DATA_FLAG_USE_COLOR_BLEND	= 1 << 1,
 	SS_DATA_FLAG_USE_ALPHA_BLEND	= 1 << 2,
+	SS_DATA_FLAG_USE_AFFINE_TRANS	= 1 << 3,
 
 	NUM_SS_DATA_FLAGS
 };
@@ -121,6 +123,7 @@ enum {
 enum {
 	SS_PART_FLAG_FLIP_H				= 1 << 0,
 	SS_PART_FLAG_FLIP_V				= 1 << 1,
+	SS_PART_FLAG_INVISIBLE			= 1 << 2,
 	
 	SS_PART_FLAG_ORIGIN_X			= 1 << 4,
 	SS_PART_FLAG_ORIGIN_Y			= 1 << 5,
@@ -175,6 +178,7 @@ struct Context
 	const bool				sourceFormatMode;
 	const bool				binaryFormatMode;
 	const textenc::Encoding	outEncoding;
+	const bool				useTragetAffineTransformation;
 
 	const std::string		prefix;
 	const std::string		dataBase;
@@ -182,12 +186,13 @@ struct Context
 	const std::string		frameDataLabel;
 	const std::string		partDataLabel;
 
-	Context(std::ostream& out, bool binaryFormatMode, textenc::Encoding outEncoding, const std::string& prefix)
+	Context(std::ostream& out, bool binaryFormatMode, textenc::Encoding outEncoding, bool useTragetAffineTransformation, const std::string& prefix)
 		: out(out)
 		, bout(out)
 		, sourceFormatMode(!binaryFormatMode)
 		, binaryFormatMode(binaryFormatMode)
 		, outEncoding(outEncoding)
+		, useTragetAffineTransformation(useTragetAffineTransformation)
 		
 		, prefix(prefix)
 		, dataBase((format("%1%_partsData") % prefix).str())
@@ -219,12 +224,13 @@ void Cocos2dSaver::save(
 	std::ostream& out,
 	bool binaryFormatMode,
 	textenc::Encoding outEncoding,
-	ss::SsMotion::Ptr motion, 
+	bool useTragetAffineTransformation,
+	ss::SsMotion::Ptr motion,
 	ss::SsImageList::ConstPtr optImageList, 
 	const std::string& prefixLabel,
 	const std::string& creatorComment)
 {
-	Context context(out, binaryFormatMode, outEncoding, prefixLabel);
+	Context context(out, binaryFormatMode, outEncoding, useTragetAffineTransformation, prefixLabel);
 	
 	// データ起点
 	if (context.sourceFormatMode)
@@ -260,8 +266,8 @@ void Cocos2dSaver::save(
 
 
 
-/** 該当するものはデータ出力から省く */
-static bool isRemovePart(const SsMotionFrameDecoder::FrameParam& r)
+/** 表示されないパーツの判定 */
+static bool isInvisiblePart(const SsMotionFrameDecoder::FrameParam& r)
 {
 	return SsMotionFrameDecoder::FrameParam::isHidden(r)				// 非表示
 		|| SsMotionFrameDecoder::FrameParam::isInvisible(r)				// 完全に透明なパーツ
@@ -278,15 +284,28 @@ void writeParts(Context& context, ss::SsMotion::Ptr motion)
 {
 	const bool parentageEnabled = false;
 
+	// フラグ初期化
+	int ssDataFlags = 0;
+	// デフォルトでは継承の計算を行う
+	SsMotionFrameDecoder::InheritCalcuationType inheritCalc = SsMotionFrameDecoder::InheritCalcuation_Calculate;
+
+	// アフィン変換をCocos2d-x側で行う場合
+	if (context.useTragetAffineTransformation)
+	{
+		// アフィン変換を行うことを設定
+		ssDataFlags |= SS_DATA_FLAG_USE_AFFINE_TRANS;
+		// 継承の計算は行わない
+		inheritCalc = SsMotionFrameDecoder::InheritCalcuation_NotCalculate;
+	}
+
 	// 各パーツのフレームごとのパラメータ値
 	std::vector<int> framesPartCounts;
 	std::vector<int> framesUserDataCounts;
-	int ssDataFlags = 0;
 	for (int frameNo = 0; frameNo < motion->getTotalFrame(); frameNo++)
 	{
-		// このフレームのパラメータを計算する 
+		// このフレームのパラメータを計算する
 		std::vector<SsMotionFrameDecoder::FrameParam> r;
-		SsMotionFrameDecoder::decodeNodes(r, motion, frameNo);
+		SsMotionFrameDecoder::decodeNodes(r, motion, frameNo, inheritCalc);
 
 //		if (context.sourceFormatMode)
 //		{
@@ -353,10 +372,13 @@ void writeParts(Context& context, ss::SsMotion::Ptr motion)
 		framesUserDataCounts.push_back(static_cast<int>(userDataInc.size()));
 
 
-        // データ出力の必要ないものはリストから削除する
-        std::vector<SsMotionFrameDecoder::FrameParam>::iterator removes =
-            std::remove_if(r.begin(), r.end(), isRemovePart);
-        r.erase(removes, r.end());
+		// 継承計算を行う場合、表示されないものはリストから削除する
+		if (!context.useTragetAffineTransformation)
+		{
+			std::vector<SsMotionFrameDecoder::FrameParam>::iterator removes =
+				std::remove_if(r.begin(), r.end(), isInvisiblePart);
+			r.erase(removes, r.end());
+		}
         
 		int partCount = static_cast<int>(r.size());
 		framesPartCounts.push_back(partCount);
@@ -839,6 +861,7 @@ static int writeFrameParam(Context& context, const SsMotionFrameDecoder::FramePa
 	unsigned int flags = 0;
 	if (param.flph.value != 0)	flags |= SS_PART_FLAG_FLIP_H;
 	if (param.flpv.value != 0)	flags |= SS_PART_FLAG_FLIP_V;
+	if (isInvisiblePart(param))	flags |= SS_PART_FLAG_INVISIBLE;
 	if (origin.x != souRect.getWidth()/2)  flags |= SS_PART_FLAG_ORIGIN_X;
 	if (origin.y != souRect.getHeight()/2) flags |= SS_PART_FLAG_ORIGIN_Y;
 	if (angle != 0)				flags |= SS_PART_FLAG_ROTATION;

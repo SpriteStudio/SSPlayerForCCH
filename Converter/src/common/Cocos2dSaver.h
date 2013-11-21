@@ -13,6 +13,7 @@ struct Cocos2dSaver
 		std::ostream& out,
 		bool binaryFormatMode,
 		textenc::Encoding outEncoding,
+		bool useTragetAffineTransformation,
 		ss::SsMotion::Ptr motion,
 		ss::SsImageList::ConstPtr optImageList,
 		const std::string& prefixLabel,

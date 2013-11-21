@@ -234,7 +234,7 @@ void writeParts(std::ostream& out, textenc::Encoding outEncoding, ss::SsMotion::
 	{
 		// このフレームのパラメータを計算する 
 		std::vector<SsMotionFrameDecoder::FrameParam> r;
-		SsMotionFrameDecoder::decodeNodes(r, motion, frameNo);
+		SsMotionFrameDecoder::decodeNodes(r, motion, frameNo, SsMotionFrameDecoder::InheritCalcuation_Calculate);
 
 		// 優先順位でソート 
 		std::sort(r.begin(), r.end(), SsMotionFrameDecoder::FrameParam::priorityComparator);

@@ -784,7 +784,7 @@ static void calcInheritance(SsMotionFrameDecoder::FrameParam& param, const SsMot
 	}
 }
 
-static void decodeNodesSub(std::vector<SsMotionFrameDecoder::FrameParam>& paramList, SsNode::ConstPtr node, int frameNo, const SsMotionFrameDecoder::FrameParam& parentParam, int depth, bool isRootOrigin)
+static void decodeNodesSub(std::vector<SsMotionFrameDecoder::FrameParam>& paramList, SsNode::ConstPtr node, int frameNo, const SsMotionFrameDecoder::FrameParam& parentParam, int depth, SsMotionFrameDecoder::InheritCalcuationType inheritCalcuation, bool isRootOrigin)
 {
 	// 自分自身のパラメータを展開する 
 	SsMotionFrameDecoder::FrameParam param;
@@ -798,24 +798,28 @@ static void decodeNodesSub(std::vector<SsMotionFrameDecoder::FrameParam>& paramL
             param.posx.value = 0;
             param.posy.value = 0;
         }
-        
-		// 継承を反映する
-		calcInheritance(param, parentParam);
+
+		if (inheritCalcuation == SsMotionFrameDecoder::InheritCalcuation_Calculate)
+		{
+			// 継承を反映する
+			calcInheritance(param, parentParam);
+		}
+
 		paramList.push_back(param);
 	}
 
 	BOOST_FOREACH( SsNode::ConstPtr child, node->getChildren() )
 	{
-		decodeNodesSub(paramList, child, frameNo, param, depth + 1, isRootOrigin);
+		decodeNodesSub(paramList, child, frameNo, param, depth + 1, inheritCalcuation, isRootOrigin);
 	}
 }
 
-void SsMotionFrameDecoder::decodeNodes(std::vector<FrameParam>& paramList, SsMotion::ConstPtr motion, int frameNo, bool isRootOrigin)
+void SsMotionFrameDecoder::decodeNodes(std::vector<FrameParam>& paramList, SsMotion::ConstPtr motion, int frameNo, InheritCalcuationType inheritCalcuation, bool isRootOrigin)
 {
 	paramList.clear();
 
 	FrameParam rootParam;
-	decodeNodesSub(paramList, motion->getRootNode(), frameNo, rootParam, 0, isRootOrigin);
+	decodeNodesSub(paramList, motion->getRootNode(), frameNo, rootParam, 0, inheritCalcuation, isRootOrigin);
 }
 
 

@@ -31,7 +31,7 @@ using boost::shared_ptr;
 
 
 static const char* APP_NAME		= "SsToCocos2d";
-static const char* APP_VERSION	= "1.0";
+static const char* APP_VERSION	= "1.0.1 alpha (Build: " __DATE__ " " __TIME__ ")";
 
 
 /** 使用方法を出力 */
@@ -58,6 +58,7 @@ struct Options
 	textenc::Encoding           outFileEncoding;
 	std::vector<fs::path>       ssaxList;
 	std::vector<fs::path>       ssfList;
+	bool						useTragetAffineTransformation;
 };
 
 /** コマンドライン引数をパースしオプションを返す */
@@ -69,7 +70,7 @@ typedef std::map<fs::path, SsImageList::Ptr> SsfImageListMap;
 static SsfImageListMap loadSsfAll(const std::vector<fs::path>& ssfList);
 
 /** ssaxを読み込み、cocos2d用プレイヤー形式で出力する */
-static SsPlayerConverterResultCode ssaxToCocos2d(std::ostream& out, bool binaryFormatMode, textenc::Encoding outEncoding, const fs::path& ssaxPath, const SsfImageListMap& ssfImageListMap);
+static SsPlayerConverterResultCode ssaxToCocos2d(std::ostream& out, const Options& options, const fs::path& ssaxPath, const SsfImageListMap& ssfImageListMap);
 
 
 
@@ -111,7 +112,7 @@ extern "C" int Converter_SsToCocos2d(int argc, const char *argv[])
 					textenc::writeBom(out, options->outFileEncoding);
 				}
 
-                resultCode = ssaxToCocos2d(out, options->binaryFormatMode, options->outFileEncoding, ssaxPath, ssfImageListMap);
+                resultCode = ssaxToCocos2d(out, *options, ssaxPath, ssfImageListMap);
                 if (resultCode != SSPC_SUCCESS) break;
             }
         }
@@ -129,7 +130,7 @@ extern "C" int Converter_SsToCocos2d(int argc, const char *argv[])
             {
                 if (options->isVerbose) std::cout << "converting: " << ssaxPath << std::endl;
 
-                resultCode = ssaxToCocos2d(out, options->binaryFormatMode, options->outFileEncoding, ssaxPath, ssfImageListMap);
+                resultCode = ssaxToCocos2d(out, *options, ssaxPath, ssfImageListMap);
                 if (resultCode != SSPC_SUCCESS) break;
             }
         }
@@ -147,7 +148,7 @@ extern "C" int Converter_SsToCocos2d(int argc, const char *argv[])
 /**
  * ssaxを読み込み、cocos2dプレイヤー形式で出力する
  */
-SsPlayerConverterResultCode ssaxToCocos2d(std::ostream& out, bool binaryFormatMode, textenc::Encoding outEncoding, const fs::path& ssaxPath, const SsfImageListMap& ssfImageListMap)
+SsPlayerConverterResultCode ssaxToCocos2d(std::ostream& out, const Options& options, const fs::path& ssaxPath, const SsfImageListMap& ssfImageListMap)
 {
 	// ssax読み込み
     SsPlayerConverterResultCode resultCode;
@@ -174,7 +175,7 @@ SsPlayerConverterResultCode ssaxToCocos2d(std::ostream& out, bool binaryFormatMo
 
 	std::string prefix = ssaxPath.stem().generic_string();
 	std::string comment = (boost::format("Created by %1% v%2%") % APP_NAME % APP_VERSION).str();
-	Cocos2dSaver::save(out, binaryFormatMode, outEncoding, motion, imageList, prefix, comment);
+	Cocos2dSaver::save(out, options.binaryFormatMode, options.outFileEncoding, options.useTragetAffineTransformation, motion, imageList, prefix, comment);
 
     return SSPC_SUCCESS;
 }
@@ -211,6 +212,7 @@ static shared_ptr<Options> parseOptions(int argc, const char* argv[])
 		("bf,b",											"Output as binary format. (default)")
 		("cf,c",											"Output as c source code.")
 		("encoding,e", po::value< std::string >(),			"Encoding of output file (UTF8/UTF8N/SJIS) default:UTF8.")
+		("affine,a",										"Use Cocos2d-x affine transformation.")
 		("in,i", po::value< std::vector<std::string> >(),	"ssax, ssf filename.")
 		("verbose,v",										"Verbose mode.")
 		;
@@ -383,6 +385,7 @@ static shared_ptr<Options> parseOptions(int argc, const char* argv[])
 	options->outFileEncoding = outFileEncoding;
 	options->ssaxList = ssaxList;
 	options->ssfList = ssfList;
+	options->useTragetAffineTransformation = vm.count("affine") != 0;
 
 	return options;
 }

@@ -379,7 +379,8 @@ public:
 	SSPartState();
 	virtual ~SSPartState();
 
-	void copyParameters(SSPlayer::PartState& state) const;
+	void init();
+	void copyParameters(SSPlayer::PartState& state) const;	
 
 private:
 	friend class SSPlayer;
@@ -389,20 +390,29 @@ private:
 	float	m_scaleX;
 	float	m_scaleY;
 	float	m_rotation;
+	cocos2d::CCSprite*	m_sprite;
+	CCAffineTransform	m_trans;
 };
 
 SSPartState::SSPartState()
-	: m_x(0)
-	, m_y(0)
-	, m_scaleX(1.0f)
-	, m_scaleY(1.0f)
-	, m_rotation(0.0f)
 {
 	this->autorelease();
+	init();
 }
 
 SSPartState::~SSPartState()
 {
+}
+
+void SSPartState::init()
+{
+	m_x = 0;
+	m_y = 0;
+	m_scaleX = 1.0f;
+	m_scaleY = 1.0f;
+	m_rotation = 0.0f;
+	m_sprite = NULL;
+	m_trans = CCAffineTransformMakeIdentity();
 }
 
 void SSPartState::copyParameters(SSPlayer::PartState& state) const
@@ -412,6 +422,7 @@ void SSPartState::copyParameters(SSPlayer::PartState& state) const
 	state.scaleX = m_scaleX;
 	state.scaleY = m_scaleY;
 	state.rotation = m_rotation;
+	state.sprite = m_sprite;
 }
 
 
@@ -465,6 +476,7 @@ enum {
 	SS_DATA_FLAG_USE_VERTEX_OFFSET	= 1 << 0,
 	SS_DATA_FLAG_USE_COLOR_BLEND	= 1 << 1,
 	SS_DATA_FLAG_USE_ALPHA_BLEND	= 1 << 2,
+	SS_DATA_FLAG_USE_AFFINE_TRANS	= 1 << 3,
 
 	NUM_SS_DATA_FLAGS
 };
@@ -472,6 +484,7 @@ enum {
 enum {
 	SS_PART_FLAG_FLIP_H				= 1 << 0,
 	SS_PART_FLAG_FLIP_V				= 1 << 1,
+	SS_PART_FLAG_INVISIBLE			= 1 << 2,
 	
 	SS_PART_FLAG_ORIGIN_X			= 1 << 4,
 	SS_PART_FLAG_ORIGIN_Y			= 1 << 5,
@@ -596,6 +609,16 @@ void SSPlayer::allocParts(int numParts, bool useCustomShaderProgram)
 		{
 			SSPartState* state = new SSPartState();
 			m_partStates.addObject(state);
+		}
+	}
+	else
+	{
+		// SPartState初期化
+		// initialize SPartState objects.
+		for (int i = 0; i < numParts; i++)
+		{
+			SSPartState* partState = static_cast<SSPartState*>( m_partStates.objectAtIndex(i) );
+			partState->init();
 		}
 	}
 }
@@ -822,12 +845,16 @@ void SSPlayer::setFrame(int frameNo)
 	bool useCustomSprite = (m_ssDataHandle->getFlags() & (SS_DATA_FLAG_USE_ALPHA_BLEND | SS_DATA_FLAG_USE_COLOR_BLEND | SS_DATA_FLAG_USE_VERTEX_OFFSET)) != 0;
 	// カラーブレンドはカスタムシェーダーを使用する
 	bool useCustomShaderProgram = (m_ssDataHandle->getFlags() & SS_DATA_FLAG_USE_COLOR_BLEND) != 0;
+	// アフィン変換の有無
+	bool useAffineTransformation = (m_ssDataHandle->getFlags() & SS_DATA_FLAG_USE_AFFINE_TRANS) != 0;
+
 
 	const SSFrameData* frameData = &(m_ssDataHandle->getFrameData()[frameNo]);
 	size_t numParts = static_cast<size_t>(frameData->numParts);
 	SSDataReader r( static_cast<const ss_u16*>( m_ssDataHandle->getAddress(frameData->partFrameData)) );
 	int nodeIndex = 0;//SSPlayerの子要素のCCSpriteBatchNodeのインデックス
 	int spriteIndex = 0;//CCSpriteBatchNodeの子要素のスプライトのIndex
+
 	for (size_t i = 0; i < numParts; i++)
 	{
 		unsigned int flags = r.readU32();
@@ -848,6 +875,8 @@ void SSPlayer::setFrame(int frameNo)
 		int opacity = (flags & SS_PART_FLAG_OPACITY) ? r.readU16() : 255;
 	
 		SSPartState* partState = static_cast<SSPartState*>( m_partStates.objectAtIndex(partNo) );
+		partState->m_sprite = NULL;
+		
 		// パーツの基本情報を取得
 		const SSPartData* partData = &m_ssDataHandle->getPartData()[partNo];
 		size_t imageNo = partData->imageNo;
@@ -949,11 +978,21 @@ void SSPlayer::setFrame(int frameNo)
 
 			//
 			// ブレンド方法を設定
-			// 直前のsetTexture()の呼び出しでBlendFuncにはCococs2d-x標準値が設定されます
 			// 標準状態でMIXブレンド相当になります
 			// BlendFuncの値を変更することでブレンド方法を切り替えます
 			//
 			ccBlendFunc blendFunc = sprite->getBlendFunc();
+			if (!tex->hasPremultipliedAlpha())
+			{
+				blendFunc.src = GL_SRC_ALPHA;
+				blendFunc.dst = GL_ONE_MINUS_SRC_ALPHA;
+			}
+			else
+			{
+				blendFunc.src = CC_BLEND_SRC;
+				blendFunc.dst = CC_BLEND_DST;
+			}
+
 			// カスタムシェーダを使用する場合
 			if (useCustomShaderProgram) {
 				blendFunc.src = GL_SRC_ALPHA;
@@ -1057,17 +1096,50 @@ void SSPlayer::setFrame(int frameNo)
 			}
 		}
 
-		// Normalパーツのみ実際に表示する
-		bool visibled = partType == kSSPartTypeNormal;
-		sprite->setVisible(visibled);
-
 		// この時点の座標、スケール値などを記録しておく
 		partState->m_x = sprite->getPositionX();
 		partState->m_y = sprite->getPositionY();
 		partState->m_scaleX = sprite->getScaleX();
 		partState->m_scaleY = sprite->getScaleY();
 		partState->m_rotation = sprite->getRotation();
+		partState->m_sprite = sprite;
+
+		// Normalパーツのみ実際に表示する
+		bool visibled = (partType == kSSPartTypeNormal) && !(flags & SS_PART_FLAG_INVISIBLE);
+		sprite->setVisible(visibled);
 	}
+
+#if (COCOS2D_VERSION >= 0x00020100)
+	if (useAffineTransformation)
+	{
+		//親のアフィン変換を適用するコード(SS5準拠）
+		//ルートパーツ以外を処理
+		size_t partsCount = m_ssDataHandle->getNumParts();
+		for (size_t partNo = 1; partNo < partsCount; partNo++)
+		{
+			CCAffineTransform trans = CCAffineTransformMakeIdentity();
+
+			//親子を調べる
+			const SSPartData* partData = &m_ssDataHandle->getPartData()[partNo];
+			SSPartState* paernt_partState = static_cast<SSPartState*>( m_partStates.objectAtIndex(partData->parentId) );
+			trans = paernt_partState->m_trans;
+
+			trans = CCAffineTransformTranslate( trans , paernt_partState->m_x , paernt_partState->m_y );
+			trans = CCAffineTransformRotate( trans , CC_DEGREES_TO_RADIANS(-paernt_partState->m_rotation) );// Rad?
+			trans = CCAffineTransformScale( trans , paernt_partState->m_scaleX,paernt_partState->m_scaleY );
+
+			SSPartState* partState = static_cast<SSPartState*>( m_partStates.objectAtIndex(partNo) );
+//			CCLOG("addr: %08lx, %08lx, %f, %f, %f, %f, %f", partState, partState->m_sprite, partState->m_x, partState->m_y, partState->m_scaleX, partState->m_scaleY, partState->m_rotation);
+//			if (!partState->m_sprite) continue;
+
+			partState->m_trans = trans;
+			if (partState->m_sprite)
+			{
+				partState->m_sprite->setAdditionalTransform( trans );
+			}
+		}
+	}
+#endif
 }
 
 void SSPlayer::setFlipX(bool bFlipX)
