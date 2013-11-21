@@ -22,32 +22,53 @@ using namespace ss;
 
 namespace {
 
-/** 現在のインデント数をカウントするクラス */
-class Indenting
-{
-	static int s_count;
+	/** 現在のインデント数をカウントするクラス */
+	class Indenting
+	{
+		static int s_count;
 
-public:
-	Indenting()  { s_count++; }
-	~Indenting() { s_count--; }
-	static int getCount() { return s_count; }
-};
+	public:
+		Indenting()  { s_count++; }
+		~Indenting() { s_count--; }
+		static int getCount() { return s_count; }
+	};
 
-int Indenting::s_count = 0;
+	int Indenting::s_count = 0;
 
 
-/** 現在のインデント数に合わせスペースを挿入するマニピュレータ */
-std::ostream& indent(std::ostream& ros)
-{
-	std::string s;
-	for (int i = 0; i < Indenting::getCount() * SPACE_OF_INDENT; i++) s.append(" ");
-	return ros << s;
-}
+	/** 現在のインデント数に合わせスペースを挿入するマニピュレータ */
+	std::ostream& indent(std::ostream& ros)
+	{
+		std::string s;
+		for (int i = 0; i < Indenting::getCount() * SPACE_OF_INDENT; i++) s.append(" ");
+		return ros << s;
+	}
 
-int toCanvas2dPartId(int id)
-{
-	return id;
-}
+	int toCanvas2dPartId(int id)
+	{
+		return id;
+	}
+
+
+	typedef enum {
+		kSSPartAlphaBlendMix,
+		kSSPartAlphaBlendMultiplication,
+		kSSPartAlphaBlendAddition,
+		kSSPartAlphaBlendSubtraction
+	} SSPartAlphaBlend;
+
+	/** 内部パーツαブレンド方法からCanvasプレイヤー用パーツαブレンド方法に変換 */
+	static int toCanvasPartAlphaBlend(SsPart::AlphaBlend ssPartAlphaBlend)
+	{
+		switch (ssPartAlphaBlend)
+		{
+			case SsPart::AlphaBlendMix:            return kSSPartAlphaBlendMix;
+			case SsPart::AlphaBlendMultiplication: return kSSPartAlphaBlendMultiplication;
+			case SsPart::AlphaBlendAddition:       return kSSPartAlphaBlendAddition;
+			case SsPart::AlphaBlendSubtraction:    return kSSPartAlphaBlendSubtraction;
+			default:                               return kSSPartAlphaBlendMix;
+		}
+	}
 
 };
 
@@ -63,13 +84,19 @@ static void writeImageList(std::ostream& out, ss::SsImageList::ConstPtr imageLis
  * Canvas2dSaver
  */
 
-Canvas2dSaver::Canvas2dSaver(std::ostream& out, textenc::Encoding outEncoding, const Options& options)
+Canvas2dSaver::Canvas2dSaver(std::ostream& out, textenc::Encoding outEncoding, const Options& options, const std::string& creatorComment)
 	: _out(out)
 	, _outEncoding(outEncoding)
 	, _options(options)
 	, _blockWritten(false)
 {
 	if (_options.isJson) _out << "{" << std::endl;
+
+	// creator情報埋め込み
+	if (!_options.isJson)
+	{
+		_out << "// " << creatorComment << std::endl;
+	}
 }
 
 Canvas2dSaver::~Canvas2dSaver()
@@ -361,6 +388,7 @@ static void writeFrameParam(std::ostream& out, const SsMotionFrameDecoder::Frame
 
 	int flipH = param.flph.value == 0 ? 0 : 1;
 	int flipV = param.flpv.value == 0 ? 0 : 1;
+	int alphaBlend = toCanvasPartAlphaBlend(node->getAlphaBlend());
 
 	saverutil::ParameterBuffer params;
 
@@ -384,8 +412,7 @@ static void writeFrameParam(std::ostream& out, const SsMotionFrameDecoder::Frame
 	params.addInt(flipH, 0);
 	params.addInt(flipV, 0);
 	params.addFloat(param.tran.value, 1.0f);
-	params.addInt(0, 0);	// 未対応：頂点変形 
-	params.addInt(0, 0);	// 未対応：頂点変形 
+	params.addInt(alphaBlend, 0);
 
 	out << "[";
 	out << params.toEllipsisString();

@@ -9,6 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/format.hpp>
 
 #include "SsaxLoader.h"
 #include "SsfLoader.h"
@@ -30,7 +31,7 @@ using boost::shared_ptr;
 
 
 static const char* APP_NAME		= "SsToHtml5";
-static const char* APP_VERSION	= "1.0";
+static const char* APP_VERSION	= "1.0.1 alpha (Build: " __DATE__ " " __TIME__ ")";
 
 
 /** 使用方法を出力 */
@@ -137,6 +138,8 @@ extern "C" int Converter_SsToHtml5(int argc, const char *argv[])
         outOptions.isJson = options->isJson;
         outOptions.isNoSuffix = options->isNoSuffix;
 
+		std::string comment = (boost::format("Created by %1% v%2%") % APP_NAME % APP_VERSION).str();
+
         SsPlayerConverterResultCode resultCode = SSPC_SUCCESS;
 
         if (options->outFilePath.empty())
@@ -159,7 +162,7 @@ extern "C" int Converter_SsToHtml5(int argc, const char *argv[])
                 std::ofstream out(outPath.generic_string().c_str());
                 textenc::writeBom(out, options->outFileEncoding);
 
-                Canvas2dSaver saver(out, options->outFileEncoding, outOptions);
+                Canvas2dSaver saver(out, options->outFileEncoding, outOptions, comment);
 
                 // prefix
                 std::string prefix = ssaxPath.stem().generic_string();
@@ -195,7 +198,7 @@ extern "C" int Converter_SsToHtml5(int argc, const char *argv[])
                 if (delimiter) out << "," << std::endl;
                 delimiter = true;
 
-                Canvas2dSaver saver(out, options->outFileEncoding, outOptions);
+                Canvas2dSaver saver(out, options->outFileEncoding, outOptions, comment);
                 
                 // ssax読み込み
                 SsMotion::Ptr motion = ConverterShared::loadSsax(ssaxPath, resultCode);

@@ -21,7 +21,7 @@ public:
 	};
 
 	/** constructor */
-	Canvas2dSaver(std::ostream& out, textenc::Encoding outEncoding, const Options& options);
+	Canvas2dSaver(std::ostream& out, textenc::Encoding outEncoding, const Options& options, const std::string& creatorComment);
 
 	/** destructor */
 	~Canvas2dSaver();
