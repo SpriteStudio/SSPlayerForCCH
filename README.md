@@ -157,5 +157,3 @@ SsPlayerConverter
 
 ### 謝辞
 - CCSpriteBatchNode 対応のコードはL.T.SOFTWARE様よりご提供いただきました。
-
-      
