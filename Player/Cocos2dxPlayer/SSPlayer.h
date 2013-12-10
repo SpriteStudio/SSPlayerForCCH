@@ -193,6 +193,9 @@ public:
     virtual void	setScaleY(float fScaleY);
 	virtual bool	isFlipX(void){ return m_ssPlayerFlipX; }
 	virtual bool	isFlipY(void){ return m_ssPlayerFlipY; }
+	virtual float	getScaleX();
+	virtual float	getScaleY();
+	virtual float	getScale();
 
 public:
 	SSPlayer(void);

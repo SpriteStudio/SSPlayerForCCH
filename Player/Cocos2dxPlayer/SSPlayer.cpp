@@ -956,8 +956,8 @@ void SSPlayer::setFrame(int frameNo)
 				
 				jointNode->setPositionX(this->getPositionX());
 				jointNode->setPositionY(this->getPositionY());
-				jointNode->setScaleX(this->getScaleX());
-				jointNode->setScaleY(this->getScaleY());
+				jointNode->setScaleX(this->m_fScaleX);
+				jointNode->setScaleY(this->m_fScaleY);
 				jointNode->setRotation(this->getRotation());
 				jointNode->setOpacity(this->getOpacity());
 				
@@ -1270,6 +1270,22 @@ void SSPlayer::setScaleY(float fScaleY)
 	m_ssPlayerScaleY = fScaleY;	
 	float temp = m_ssPlayerFlipY == true ? -m_ssPlayerScaleY : m_ssPlayerScaleY;
 	cocos2d::CCSprite::setScaleY(temp);
+}
+
+float SSPlayer::getScaleX()
+{
+	return m_ssPlayerScaleX;
+}
+
+float SSPlayer::getScaleY()
+{
+	return m_ssPlayerScaleY;
+}
+
+float SSPlayer::getScale()
+{
+    CCAssert( m_ssPlayerScaleX == m_ssPlayerScaleY, "SSPlayer#scale. ScaleX != ScaleY. Don't know which one to return");
+	return m_ssPlayerScaleX;
 }
 
 void SSPlayer::setChildVisibleAll(bool visible)
