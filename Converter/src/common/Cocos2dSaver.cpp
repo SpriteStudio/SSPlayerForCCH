@@ -621,7 +621,7 @@ void writeParts(Context& context, ss::SsMotion::Ptr motion)
 
 
 	// すべての情報を束ねるデータ本体 
-	const unsigned int version = FormatVersion_3;
+	const unsigned int version = CurrentFormatVersion;
 
 	const unsigned int id0 = 0xffffffff;
 	const unsigned int id1 = toId("SSBA");

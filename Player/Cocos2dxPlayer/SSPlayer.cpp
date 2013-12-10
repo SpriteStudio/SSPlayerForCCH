@@ -67,6 +67,7 @@ using namespace cocos2d;
 
 static const ss_u32 SSDATA_ID_0 = 0xffffffff;
 static const ss_u32 SSDATA_ID_1 = 0x53534241;
+static const ss_u32 SSDATA_VERSION = 4;
 
 
 
@@ -133,6 +134,7 @@ public:
 	{
 		CCAssert(data->id[0] == SSDATA_ID_0, "Not id 0 matched.");
 		CCAssert(data->id[1] == SSDATA_ID_1, "Not id 1 matched.");
+		CCAssert(data->version == SSDATA_VERSION, "Version number of data does not match.");
 	}
 	
 	ss_u32 getFlags() const { return m_data->flags; }
