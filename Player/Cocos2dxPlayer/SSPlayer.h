@@ -6,6 +6,7 @@
 #include "SSPlayerData.h"
 
 class SSPlayerDelegate;
+class SSPlayerBatch;
 
 
 /**
@@ -210,6 +211,11 @@ protected:
 	void setChildVisibleAll(bool visible);
 	void checkUserData(int frameNo);
 
+	friend class SSPlayerBatch;
+
+	void registerBatch(SSPlayerBatch* batch);
+	void unregisterBatch(SSPlayerBatch* batch);
+
 protected:
 	class SSDataHandle*	m_ssDataHandle;
 	SSImageList*		m_imageList;
@@ -217,6 +223,10 @@ protected:
 	SSPlayerDelegate*	m_delegate;
 	SSUserData			m_userData;
 
+	SSPlayerBatch*		m_batch;
+	cocos2d::CCArray	m_batchSprites;
+	cocos2d::CCArray	m_jointSprites;
+	
 	cocos2d::CCArray	m_partStates;
 	float				m_playingFrame;
 	float				m_step;
@@ -245,6 +255,58 @@ public:
 	 *  Receive a user data.
 	 */
 	virtual void onUserData(SSPlayer* player, const SSUserData* data, int frameNo, const char* partName);
+};
+
+
+
+/**
+ * SSPlayerBatch
+ */
+
+class SSPlayerBatch : public cocos2d::CCNode
+{
+public:
+	static SSPlayerBatch* create();
+
+	/** CCSpriteBatchNodeを構築する際に指定するcapacityを設定します
+	 *  初期値はkDefaultSpriteBatchCapacityです
+	 */
+	void setDefaultSpriteBatchCapacity(unsigned int capacity);
+
+	/** SSPlayerオブジェクトを登録する　※SSPlayer型のみ登録可能です
+	 */
+	virtual void addChild(CCNode * child);
+
+	/** SSPlayerオブジェクトを登録する　※SSPlayer型のみ登録可能です
+	 */
+	virtual void addChild(CCNode * child, int zOrder);
+
+	/** SSPlayerオブジェクトを登録する　※SSPlayer型のみ登録可能です
+	 */
+	virtual void addChild(CCNode * child, int zOrder, int tag);
+
+	/** SSPlayerオブジェクトを除外する
+	 */
+	virtual void removeChild(CCNode * child);
+
+public:
+	SSPlayerBatch(void);
+	virtual ~SSPlayerBatch();
+	virtual bool init();
+	void update(float dt);
+	
+	void getNode(cocos2d::CCNode*& node, bool batchNodeRequired, cocos2d::CCTexture2D* tex);
+
+protected:
+	cocos2d::CCNode* m_players;
+	cocos2d::CCNode* m_bundles;
+	unsigned int m_defaultCapacity;
+
+	int m_currentNodeIndex;
+	cocos2d::CCNode* m_currentNode;
+	cocos2d::CCSpriteBatchNode* m_currentBatchNode;
+	bool m_isBatchNodeCurrent;
+	cocos2d::CCTexture2D* m_currentTexture;
 };
 
 
