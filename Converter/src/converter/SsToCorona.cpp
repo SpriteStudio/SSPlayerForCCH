@@ -31,7 +31,7 @@ using boost::shared_ptr;
 
 
 static const char* APP_NAME		= "SsToCorona";
-static const char* APP_VERSION	= "1.0";
+static const char* APP_VERSION	= "1.0.1 (Build: " __DATE__ " " __TIME__ ")";
 
 static const char* DEFAULT_OUT_EXTESION = "lua";
 
