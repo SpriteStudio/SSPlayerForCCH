@@ -1405,7 +1405,10 @@ void SSPlayerDelegate::onUserData(SSPlayer* player, const SSUserData* data, int 
 /**
  * SSPlayerBatch
  *
- * SSPlayerをSSPlayerBatch配下に配置することにより、できる限りバッチノードを使った描画を行うようになります。
+ * SSPlayerをSSPlayerBatch配下に配置（addChild）することにより、
+ * できる限りバッチノードを使った描画を行うようになります。
+ * ※SSPlayerBatchはSSPlayerのみ登録可能です。
+ *
  * 以下の条件を満たしているとき、バッチノードを使った描画が行われます。（条件に合わないパーツは単独で描画されます）
  * ・同一のテクスチャを使用している
  * ・次の効果を使用していない：頂点変形、カラーブレンド、αブレンドでMIX以外
