@@ -684,15 +684,20 @@ void SSPlayer::setAnimation(const SSData* ssData, SSImageList* imageList)
 	if (!m_batch)
 	{
 		setFrame(0);
+		this->scheduleUpdate();
 	}
-
-	this->scheduleUpdate();
 }
 
 void SSPlayer::update(float dt)
 {
-//	CCLOG("%f", dt);
+	if (!m_batch)
+	{
+		updateFrame(dt);
+	}
+}
 
+void SSPlayer::updateFrame(float dt)
+{
 	if (!hasAnimation()) return;
 
 	if (m_loop == 0 || m_loopCount < m_loop)
@@ -772,10 +777,7 @@ void SSPlayer::update(float dt)
 		m_playingFrame = static_cast<float>(currentFrameNo) + nextFrameDecimal;
 	}
 
-	if (!m_batch)
-	{
-		setFrame(getFrameNo());
-	}
+	setFrame(getFrameNo());
 }
 
 int SSPlayer::getFrameNo() const
@@ -1376,12 +1378,14 @@ void SSPlayer::checkUserData(int frameNo)
 
 void SSPlayer::registerBatch(SSPlayerBatch *batch)
 {
+	this->unscheduleUpdate();
 	m_batch = batch;
 }
 
 void SSPlayer::unregisterBatch(SSPlayerBatch *batch)
 {
 	m_batch = 0;
+	this->scheduleUpdate();
 }
 
 
@@ -1537,7 +1541,7 @@ void SSPlayerBatch::update(float dt)
 			SSPlayer* player = (SSPlayer*)child;
 			if (player)
 			{
-				player->setFrame(player->getFrameNo());
+				player->updateFrame(dt);
 			}
 		}
 	}

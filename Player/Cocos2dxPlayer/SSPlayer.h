@@ -210,6 +210,7 @@ protected:
 	void clearAnimation();
 	bool hasAnimation() const;
 
+	void updateFrame(float dt);
 	void setFrame(int frameNo);
 	void setChildVisibleAll(bool visible);
 	void checkUserData(int frameNo);
