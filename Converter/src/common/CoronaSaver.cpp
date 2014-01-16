@@ -150,6 +150,11 @@ CoronaSaver::CoronaSaver(std::ostream& out, textenc::Encoding outEncoding, const
 {
 	// creator情報埋め込み
 	out << "-- " << creatorComment << std::endl;
+
+	if ( options.isluaModule )
+	{
+		out << "module(...,package.seeall)" << std::endl;
+	}
 }
 
 CoronaSaver::~CoronaSaver()
@@ -280,7 +285,7 @@ void writeParts(std::ostream& out, textenc::Encoding outEncoding, ss::SsMotion::
     
 	const char* qt = "'";
 
-	const char* fmtPrefix = "%1%_animation";
+	const char* fmtPrefix = options.isNoSuffix ? "%1%" : "%1%_animation";
 	const std::string prefix = (format(fmtPrefix) % prefixLabel).str();
 
 	const int fps = motion->getBaseTickTime();

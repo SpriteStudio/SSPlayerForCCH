@@ -31,7 +31,7 @@ using boost::shared_ptr;
 
 
 static const char* APP_NAME		= "SsToCorona";
-static const char* APP_VERSION	= "1.0.1 (Build: " __DATE__ " " __TIME__ ")";
+static const char* APP_VERSION	= "1.0.2 (Build: " __DATE__ " " __TIME__ ")";
 
 static const char* DEFAULT_OUT_EXTESION = "lua";
 
@@ -56,7 +56,7 @@ struct Options
 	bool                        isVerbose;
 	fs::path                    outFilePath;
 	bool                        isJson;				/**< JSON形式で出力します */
-	bool                        isNoSuffix;			/**< アニメテーブル変数名に_ssaを付けないようにします */
+	bool                        isNoSuffix;			/**< アニメテーブル変数名に_animationを付けないようにします */
 	textenc::Encoding           outFileEncoding;
 	std::vector<fs::path>       ssaxList;
 	std::vector<fs::path>       ssfList;
@@ -112,6 +112,8 @@ extern "C" int Converter_SsToCorona(int argc, const char *argv[])
 		std::string comment = (boost::format("Created by %1% v%2%") % APP_NAME % APP_VERSION).str();
 
         CoronaSaver::Options outOptions;
+		outOptions.isluaModule = options->isluaModule;
+		outOptions.isNoSuffix = options->isNoSuffix;
         SsPlayerConverterResultCode resultCode = SSPC_SUCCESS;
 
         if (options->outFilePath.empty())
@@ -135,14 +137,6 @@ extern "C" int Converter_SsToCorona(int argc, const char *argv[])
                 
                 // prefix
                 std::string prefix = ssaxPath.stem().generic_string();
-				if ( options->isNoSuffix)
-				{
-					prefix = "";
-				}
-				if ( options->isluaModule )
-				{
-					out << "module(...,package.seeall)" << std::endl;
-				}
 
                 // ssfの指定があるときは、こちらを画像リストファイルとして出力
                 if (imageList)

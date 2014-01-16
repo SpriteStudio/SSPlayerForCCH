@@ -16,8 +16,8 @@ public:
 	/** 出力オプション */
 	struct Options
 	{
-		bool	isJson;
 		bool	isNoSuffix;
+		bool	isluaModule;
 	};
 
 	/** constructor */
