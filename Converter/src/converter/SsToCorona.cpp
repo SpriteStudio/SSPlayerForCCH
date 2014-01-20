@@ -61,7 +61,7 @@ struct Options
 	std::vector<fs::path>       ssaxList;
 	std::vector<fs::path>       ssfList;
 	bool						isluaModule;
-
+	bool						isOmitNullPart;		/**< NULLパーツを出力から省く */
 };
 
 /** コマンドライン引数をパースしオプションを返す */
@@ -114,6 +114,7 @@ extern "C" int Converter_SsToCorona(int argc, const char *argv[])
         CoronaSaver::Options outOptions;
 		outOptions.isluaModule = options->isluaModule;
 		outOptions.isNoSuffix = options->isNoSuffix;
+		outOptions.isOmitNullPart = options->isOmitNullPart;
         SsPlayerConverterResultCode resultCode = SSPC_SUCCESS;
 
         if (options->outFilePath.empty())
@@ -232,6 +233,7 @@ static shared_ptr<Options> parseOptions(int argc, const char* argv[])
 		("verbose,v",										"Verbose mode.")
 		("module,m",										"file to lua module.")
 		("nosuffix,n",										"Avoid adding \"_animation\" to the animation variable name.")
+		("nonull,u",										"Omit NULL part from output.")
 		;
 
 	po::positional_options_description p;
@@ -383,7 +385,7 @@ static shared_ptr<Options> parseOptions(int argc, const char* argv[])
 
 	options->isluaModule = vm.count("module") != 0;;
 	options->isNoSuffix = vm.count("nosuffix") != 0;
-	
+	options->isOmitNullPart = vm.count("nonull") != 0;
 	
 
 	return options;

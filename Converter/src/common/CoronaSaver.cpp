@@ -270,9 +270,15 @@ static bool isRemovePart(const SsMotionFrameDecoder::FrameParam& r)
 		|| SsMotionFrameDecoder::FrameParam::isInvisible(r)				// 完全に透明なパーツ
 		|| SsMotionFrameDecoder::FrameParam::isRoot(r)					// ルートパーツ
 		|| SsMotionFrameDecoder::FrameParam::isHitTestOrSoundPart(r)	// 当たり判定, サウンドパーツ
-		|| SsMotionFrameDecoder::FrameParam::isNullPart(r)				// NULLパーツ
 		|| SsMotionFrameDecoder::FrameParam::isScaleZero(r)				// スケール値が０のもの
 	;
+}
+
+/** isRemovePart()に加えNULLパーツもデータ出力から省く */
+static bool isRemovePartAndNull(const SsMotionFrameDecoder::FrameParam& r)
+{
+	return SsMotionFrameDecoder::FrameParam::isNullPart(r)
+		|| isRemovePart(r);
 }
 
 
@@ -318,8 +324,11 @@ void writeParts(std::ostream& out, textenc::Encoding outEncoding, ss::SsMotion::
 		std::sort(r.begin(), r.end(), SsMotionFrameDecoder::FrameParam::priorityComparator);
 
         // データ出力の必要ないものはリストから削除する
+		bool (*removeFunc)(const SsMotionFrameDecoder::FrameParam& r) = 
+			options.isOmitNullPart ? isRemovePartAndNull : isRemovePart;
+
         std::vector<SsMotionFrameDecoder::FrameParam>::iterator removes =
-            std::remove_if(r.begin(), r.end(), isRemovePart);
+            std::remove_if(r.begin(), r.end(), removeFunc);
         r.erase(removes, r.end());
 
         //int partCount = static_cast<int>(r.size());

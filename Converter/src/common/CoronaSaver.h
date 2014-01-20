@@ -18,6 +18,7 @@ public:
 	{
 		bool	isNoSuffix;
 		bool	isluaModule;
+		bool	isOmitNullPart;		/**< NULLパーツを出力しない */
 	};
 
 	/** constructor */
