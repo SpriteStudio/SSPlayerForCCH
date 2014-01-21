@@ -1,3 +1,27 @@
+
+------------------------------------------------------------------------
+* Copyrights and Disclaimers
+
+  - Copyrights for the documentation, source files, and sample programs are the property of Web Technology Corp.
+    If the user includes the sample source in game titles, etc., the user may modify the source as required.
+
+  - The documentation, source files, and sample programs in this package may be used without a license. 
+    The documentation, source files, and sample programs in this package may be freely used when the SpriteStudio user uses SpriteStudio files, for example in development of game titles.
+
+  - Web Technology Corp. accepts no liability for any loss incurred directly or indirectly through use of the documentation, source files, and sample programs in this package.
+
+  - Do not reprint or redistribute this package.
+
+  - The documents in this package were written for experienced application program developers. 
+    General program development techniques have been omitted.
+
+  - SSAX file format specifications are subject to future change.
+
+  - Operation of programs created by customers is excluded from support.
+
+
+
+------------------------------------------------------------------------
 ■利用規約
 
 1. 本リポジトリ内のすべてのファイル（以下、「本ファイル」という）の著作権は株式
@@ -24,3 +48,4 @@
    一切の保証をしません。当社は、本ファイルに起因または関連し、あるいは本ファイ
    ルの使用またはその他の扱いによって生じる一切の損害について何らの責任も負わな
    いものとします。
+
