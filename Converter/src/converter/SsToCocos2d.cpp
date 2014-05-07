@@ -31,7 +31,7 @@ using boost::shared_ptr;
 
 
 static const char* APP_NAME		= "SsToCocos2d";
-static const char* APP_VERSION	= "1.0.2 (Build: " __DATE__ " " __TIME__ ")";
+static const char* APP_VERSION	= "1.0.3 (Build: " __DATE__ " " __TIME__ ")";
 
 
 /** 使用方法を出力 */
@@ -59,6 +59,7 @@ struct Options
 	std::vector<fs::path>       ssaxList;
 	std::vector<fs::path>       ssfList;
 	bool						useTragetAffineTransformation;
+	bool						notModifyImagePath;
 };
 
 /** コマンドライン引数をパースしオプションを返す */
@@ -172,10 +173,14 @@ SsPlayerConverterResultCode ssaxToCocos2d(std::ostream& out, const Options& opti
 			imageList = ssfImageListMap.find(ssfPath)->second;
 		}
 	}
+	
+	Cocos2dSaver::Options saverOpt;
+	saverOpt.useTragetAffineTransformation = options.useTragetAffineTransformation;
+	saverOpt.notModifyImagePath = options.notModifyImagePath;
 
 	std::string prefix = ssaxPath.stem().generic_string();
 	std::string comment = (boost::format("Created by %1% v%2%") % APP_NAME % APP_VERSION).str();
-	Cocos2dSaver::save(out, options.binaryFormatMode, options.outFileEncoding, options.useTragetAffineTransformation, motion, imageList, prefix, comment);
+	Cocos2dSaver::save(out, options.binaryFormatMode, options.outFileEncoding, saverOpt, motion, imageList, prefix, comment);
 
     return SSPC_SUCCESS;
 }
@@ -213,6 +218,7 @@ static shared_ptr<Options> parseOptions(int argc, const char* argv[])
 		("cf,c",											"Output as c source code.")
 		("encoding,e", po::value< std::string >(),			"Encoding of output file (UTF8/UTF8N/SJIS) default:UTF8.")
 		("affine,a",										"Use Cocos2d-x affine transformation.")
+		("nm,m",											"Not modify image path.")
 		("in,i", po::value< std::vector<std::string> >(),	"ssax, ssf filename.")
 		("verbose,v",										"Verbose mode.")
 		;
@@ -386,6 +392,7 @@ static shared_ptr<Options> parseOptions(int argc, const char* argv[])
 	options->ssaxList = ssaxList;
 	options->ssfList = ssfList;
 	options->useTragetAffineTransformation = vm.count("affine") != 0;
+	options->notModifyImagePath = vm.count("nm") != 0;
 
 	return options;
 }

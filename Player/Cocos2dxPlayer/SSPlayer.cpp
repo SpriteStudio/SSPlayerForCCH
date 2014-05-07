@@ -137,6 +137,8 @@ public:
 		CCAssert(data->version == SSDATA_VERSION, "Version number of data does not match.");
 	}
 	
+	const SSData* getData() const { return m_data; }
+	
 	ss_u32 getFlags() const { return m_data->flags; }
 	int getNumParts() const { return m_data->numParts; }
 	int getNumFrames() const { return m_data->numFrames; }
@@ -543,6 +545,8 @@ SSPlayer::SSPlayer(void)
 	, m_imageList(0)
 	, m_frameSkipEnabled(true)
 	, m_delegate(0)
+	, m_playEndTarget(NULL)
+	, m_playEndSelector(NULL)
 	, m_batch(0)
 	, m_ssPlayerScaleX( 1.0f )
 	, m_ssPlayerScaleY( 1.0f )
@@ -564,12 +568,12 @@ SSPlayer* SSPlayer::create()
 	return NULL;
 }
 	
-SSPlayer* SSPlayer::create(const SSData* ssData, SSImageList* imageList)
+SSPlayer* SSPlayer::create(const SSData* ssData, SSImageList* imageList, int loop)
 {
 	SSPlayer* player = create();
 	if (player)
 	{
-		player->setAnimation(ssData, imageList);
+		player->setAnimation(ssData, imageList, loop);
 	}
 	return player;
 }
@@ -655,7 +659,7 @@ void SSPlayer::clearAnimation()
 	m_imageList = 0;
 }
 
-void SSPlayer::setAnimation(const SSData* ssData, SSImageList* imageList)
+void SSPlayer::setAnimation(const SSData* ssData, SSImageList* imageList, int loop)
 {
 	CCAssert(ssData != NULL, "zero is ssData pointer");
 	CCAssert(imageList != NULL, "zero is imageList pointer");
@@ -678,7 +682,7 @@ void SSPlayer::setAnimation(const SSData* ssData, SSImageList* imageList)
 
 	m_playingFrame = 0.0f;
 	m_step = 1.0f;
-	m_loop = 0;
+	m_loop = loop;
 	m_loopCount = 0;
 
 	if (!m_batch)
@@ -686,6 +690,11 @@ void SSPlayer::setAnimation(const SSData* ssData, SSImageList* imageList)
 		setFrame(0);
 		this->scheduleUpdate();
 	}
+}
+
+const SSData* SSPlayer::getAnimation() const
+{
+	return m_ssDataHandle->getData();
 }
 
 void SSPlayer::update(float dt)
@@ -699,7 +708,8 @@ void SSPlayer::update(float dt)
 void SSPlayer::updateFrame(float dt)
 {
 	if (!hasAnimation()) return;
-
+	
+	bool playEnd = false;
 	if (m_loop == 0 || m_loopCount < m_loop)
 	{
 		// フレームを進める.
@@ -733,6 +743,7 @@ void SSPlayer::updateFrame(float dt)
 					{
 						// 再生終了.
 						// play end.
+						playEnd = true;
 						break;
 					}
 					
@@ -761,6 +772,7 @@ void SSPlayer::updateFrame(float dt)
 					{
 						// 再生終了.
 						// play end.
+						playEnd = true;
 						break;
 					}
 				
@@ -778,6 +790,11 @@ void SSPlayer::updateFrame(float dt)
 	}
 
 	setFrame(getFrameNo());
+
+	if (playEnd && m_playEndTarget)
+	{
+		(m_playEndTarget->*m_playEndSelector)(this);
+	}
 }
 
 int SSPlayer::getFrameNo() const
@@ -835,6 +852,14 @@ bool SSPlayer::isFrameSkipEnabled() const
 void SSPlayer::setDelegate(SSPlayerDelegate* delegate)
 {
 	m_delegate = delegate;
+}
+
+void SSPlayer::setPlayEndCallback(CCObject* target, SEL_PlayEndHandler selector)
+{
+	CC_SAFE_RELEASE(m_playEndTarget);
+	CC_SAFE_RETAIN(target);
+	m_playEndTarget = target;
+	m_playEndSelector = selector;
 }
 
 bool SSPlayer::getPartState(SSPlayer::PartState& result, const char* name)

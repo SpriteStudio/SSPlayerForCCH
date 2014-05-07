@@ -96,6 +96,9 @@ struct SSUserData
 class SSPlayer : public cocos2d::CCSprite
 {
 public:
+	typedef void (cocos2d::CCObject::*SEL_PlayEndHandler)(SSPlayer*);
+
+public:
 	/** SSPlayerを生成します.
 	 *  Create a SSPlayer object.
 	 */
@@ -104,12 +107,16 @@ public:
 	/** SSPlayerを生成し、アニメーションを設定します.
 	 *  Create a SSPlayer object, and set animation.
 	 */
-	static SSPlayer* create(const SSData* ssData, SSImageList* imageList);
+	static SSPlayer* create(const SSData* ssData, SSImageList* imageList, int loop = 0);
 
 	/** アニメーションを設定します.
 	 *  Set animation.
 	 */
-	void setAnimation(const SSData* ssData, SSImageList* imageList);
+	void setAnimation(const SSData* ssData, SSImageList* imageList, int loop = 0);
+
+	/** 設定されているアニメーションを返します.
+	 */
+	const SSData* getAnimation() const;
 
 	/** 再生フレームNoを取得します.
 	 *  Get frame no of playing.
@@ -165,6 +172,19 @@ public:
 	 *  Set delegate. receive a notification, such as user data.
 	 */
 	void setDelegate(SSPlayerDelegate* delegate);
+
+	/** 再生終了の通知を受けるコールバックを設定します.
+	 *
+     *  @code
+	 *  player->setPlayEndCallback(this, ssplayer_playend_selector(MyScene::playEndCallback));
+	 *  --
+	 *  void MyScene::playEndCallback(SSPlayer* player)
+	 *  {
+	 *    ...
+	 *  }
+     *  @endcode
+	 */
+	void setPlayEndCallback(cocos2d::CCObject* target, SEL_PlayEndHandler selector);
 
 
 	/** パーツの状態を示します.
@@ -226,6 +246,8 @@ protected:
 	bool				m_frameSkipEnabled;
 	SSPlayerDelegate*	m_delegate;
 	SSUserData			m_userData;
+	CCObject*			m_playEndTarget;
+	SEL_PlayEndHandler	m_playEndSelector;
 
 	SSPlayerBatch*		m_batch;
 	cocos2d::CCArray	m_batchSprites;
@@ -243,6 +265,8 @@ protected:
 	bool				m_ssPlayerFlipY;
 };
 
+
+#define ssplayer_playend_selector(_SELECTOR) (SSPlayer::SEL_PlayEndHandler)(&_SELECTOR)
 
 
 /**
