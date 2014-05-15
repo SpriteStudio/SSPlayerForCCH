@@ -357,9 +357,7 @@ CCTexture2D* SSImageList::getTexture(size_t index)
 
 void SSImageList::addTexture(const char* imageName, const char* imageDir)
 {
-	std::string path;
-	if (imageDir) path.append(imageDir);
-	path.append(imageName);
+	std::string path = s_generator(imageName, imageDir);
 	
 	CCTextureCache* texCache = CCTextureCache::sharedTextureCache();
 	CCTexture2D* tex = texCache->addImage(path.c_str());
@@ -368,8 +366,64 @@ void SSImageList::addTexture(const char* imageName, const char* imageDir)
 		CCLOG("image load failed: %s", path.c_str());
 		CC_ASSERT(0);
 	}
+	CCLOG("Load image: %s", path.c_str());
 	m_imageList.addObject(tex);
 }
+
+std::string SSImageList::defaultImagePathGenerator(const char* imageName, const char* imageDir)
+{
+	std::string path;
+	if (imageDir)
+	{
+		path.append(imageDir);
+		size_t pathLen = path.length();
+		if (pathLen && path.at(pathLen-1) != '/' && path.at(pathLen-1) != '\\')
+		{
+			path.append("/");
+		}
+	}
+	path.append(imageName);
+	return path;
+}
+
+/*
+static std::string exampleImagePathGenerator(const char* imageName, const char* imageDir)
+{
+	std::string path;
+	if (imageDir)
+	{
+		path.append(imageDir);
+		size_t pathLen = path.length();
+		if (pathLen && path.at(pathLen-1) != '/' && path.at(pathLen-1) != '\\')
+		{
+			path.append("/");
+		}
+	}
+
+	float csf = CCDirector::sharedDirector()->getContentScaleFactor();
+	// ContentScaleFactorの値により読み込み先ディレクトリを変更する
+	if (csf >= 2.0f)
+	{
+		path.append("hd/");
+	}
+	else
+	{
+		path.append("sd/");
+	}
+
+	path.append(imageName);
+	return path;
+}
+*/
+
+SSImageList::ImagePathGenerator SSImageList::s_generator = SSImageList::defaultImagePathGenerator;
+
+void SSImageList::setImagePathGenerator(ImagePathGenerator generator)
+{
+	s_generator = generator;
+}
+
+
 
 
 

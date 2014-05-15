@@ -45,6 +45,76 @@ public:
 	 *  Get texture at specified index.
 	 */
 	cocos2d::CCTexture2D* getTexture(size_t index);
+	
+
+	typedef std::string (*ImagePathGenerator)(const char* imageName, const char* imageDir);
+
+	/**
+	 * このメソッドで設定された静的メソッドで、SSImageListが読み込む画像のファイルパスを調整できます.
+	 * ContentScaleFactorの値に応じ、使用する画像を切り替えるなどの用途に使用できます.
+	 *
+	 * ContentScaleFactorの値に応じ、読み込む画像を切り替えるには、
+	 * 以下のようなImagePathGeneratorを実装し、このメソッドで設定してください。
+     * @code
+	 * static std::string imagePathGenerator(const char* imageName, const char* imageDir)
+	 * {
+	 *   std::string path;
+	 *   if (imageDir)
+	 *   {
+	 * 	   path.append(imageDir);
+	 * 	   size_t pathLen = path.length();
+	 *     if (pathLen && path.at(pathLen-1) != '/' && path.at(pathLen-1) != '\\')
+	 * 	   {
+	 * 	     path.append("/");
+	 * 	   }
+	 *   }
+	 *
+	 *   float csf = CCDirector::sharedDirector()->getContentScaleFactor();
+	 *   // ContentScaleFactorの値により読み込み先ディレクトリを変更する
+	 *   if (csf >= 2.0f)
+	 *   {
+	 *     path.append("hd/");
+	 *   }
+	 *   else
+	 *   {
+	 *     path.append("sd/");
+	 *   }
+	 *
+	 *   path.append(imageName);
+	 *   return path;
+	 * }
+	 *
+	 * --
+	 *
+	 * SSImageList::setImagePathGenerator(imagePathGenerator);
+	 *
+     * @endcode
+	 */
+	static void setImagePathGenerator(ImagePathGenerator generator);
+
+	/**
+	 * 標準のImagePathGeneratorです.
+	 *
+	 * 中身は以下の通りです.
+     * @code
+	 * std::string SSImageList::defaultImagePathGenerator(const char* imageName, const char* imageDir)
+	 * {
+	 *   std::string path;
+	 *   if (imageDir)
+	 *   {
+	 * 	   path.append(imageDir);
+	 * 	   size_t pathLen = path.length();
+	 *     if (pathLen && path.at(pathLen-1) != '/' && path.at(pathLen-1) != '\\')
+	 * 	   {
+	 * 	     path.append("/");
+	 * 	   }
+	 *   }
+	 *   path.append(imageName);
+	 *   return path;
+	 * }
+     * @endcode
+	 */
+	static std::string defaultImagePathGenerator(const char* imageName, const char* imageDir);
 
 public:
 	SSImageList(void);
@@ -62,6 +132,8 @@ protected:
 	void addTexture(const char* imageName, const char* imageDir);
 
 	cocos2d::CCArray	m_imageList;
+	
+	static ImagePathGenerator	s_generator;
 };
 
 
