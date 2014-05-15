@@ -1,6 +1,9 @@
 
 改版履歴
 
+1.0.4 (2014/5/15)
+- [corona/html5]浮動小数の出力精度を6桁に改めました
+
 1.0.3 (2014/5/7)- [cocos] -mオプションの追加。-mを指定すると画像パスをssaxに記述されたまま出力します（指定なしのときはファイル名部のみ出力します）Cocos2dxPlayer変更点：- 再生終了時に呼び出すコールバックを設定できるようにしました（SSPlayer）　使用例：    player->setPlayEndCallback(this, ssplayer_playend_selector(MyScene::playEndCallback));    ～    void MyScene::playEndCallback(SSPlayer* player) {      ...    }- setAnimation()メソッドにloop引数を追加しました。デフォルトは0です（SSPlayer）- getAnimation()メソッドを追加しました（SSPlayer）1.0.2 (2014/1/20)
 - [corona] -oオプションが指定されているとき、-m, -nオプションが機能しない不具合の修正
 - [corona] -nオプションの挙動を修正
