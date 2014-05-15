@@ -23,9 +23,9 @@ std::string toShortString(float value)
 	double i;
 	double d = std::modf(value, &i);
 
-	// 小数部が0のときは小数１桁、それ以外は小数２桁にする。
+	// 小数部が0のときは小数１桁、それ以外は小数６桁にする。
 	// 切り捨てられる小数部は四捨五入される
-	int nd = (d == 0.0) ? 1 : 2;
+	int nd = (d == 0.0) ? 1 : 6;
 	ss << std::setprecision(nd) << std::setiosflags(std::ios::fixed);
 
 	ss << value;
