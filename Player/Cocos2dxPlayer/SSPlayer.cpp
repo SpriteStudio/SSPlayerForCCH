@@ -61,6 +61,12 @@ using namespace cocos2d;
 #define USE_CUSTOM_SPRITE		1		// (0:Not use, 1:Use)
 
 
+// ContentScaleFactorに合わせてUVを調整します
+// 有効にする場合、USE_CUSTOM_SPRITEも1である必要があります.
+#define ADJUST_UV_BY_CONTENT_SCALE_FACTOR	0	// (0:disable, 1:enable)
+
+
+
 /**
  * definition
  */
@@ -514,6 +520,10 @@ public:
 	// override
 	virtual void draw(void);
 	virtual void setOpacity(GLubyte opacity);
+
+#if ADJUST_UV_BY_CONTENT_SCALE_FACTOR
+	virtual void setVertexRect(const CCRect& rect);
+#endif
 	
 	// original functions
 	void changeShaderProgram(bool useCustomShaderProgram);
@@ -1191,7 +1201,17 @@ void SSPlayer::setFrame(int frameNo)
 			sprite->setBlendFunc(blendFunc);
 		}
 
+#if ADJUST_UV_BY_CONTENT_SCALE_FACTOR
+		CCRect orgRect(sx, sy, sw, sh);
+		float sf = CC_CONTENT_SCALE_FACTOR();
+		float ssx = (float)sx / sf;
+		float ssy = (float)sy / sf;
+		float ssw = (float)sw / sf;
+		float ssh = (float)sh / sf;
+		sprite->setTextureRect(CCRect(ssx, ssy, ssw, ssh), false, orgRect.size);
+#else
 		sprite->setTextureRect(CCRect(sx, sy, sw, sh));
+#endif
 
 		sprite->setOpacity( opacity );
 		
@@ -1238,6 +1258,7 @@ void SSPlayer::setFrame(int frameNo)
 			vquad.br.vertices.x += r.readS16();
 			vquad.br.vertices.y -= r.readS16();
 		}
+
 
 		// color blend
 		ccColor4B color4 = { 0xff, 0xff, 0xff, 0 };
@@ -1793,6 +1814,15 @@ void SSSprite::setOpacity(GLubyte opacity)
 	CCSprite::setOpacity(opacity);
 	_opacity = static_cast<float>(opacity) / 255.0f;
 }
+
+#if ADJUST_UV_BY_CONTENT_SCALE_FACTOR
+void SSSprite::setVertexRect(const CCRect& rect)
+{
+	float sf = CC_CONTENT_SCALE_FACTOR();
+	m_obRect = CCRect(rect.origin.x * sf, rect.origin.y * sf, rect.size.width * sf, rect.size.height * sf);
+}
+#endif
+
 
 void SSSprite::draw(void)
 {
