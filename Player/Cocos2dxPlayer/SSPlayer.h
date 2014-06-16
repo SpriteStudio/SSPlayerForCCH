@@ -45,6 +45,76 @@ public:
 	 *  Get texture at specified index.
 	 */
 	cocos2d::CCTexture2D* getTexture(size_t index);
+	
+
+	typedef std::string (*ImagePathGenerator)(const char* imageName, const char* imageDir);
+
+	/**
+	 * このメソッドで設定された静的メソッドで、SSImageListが読み込む画像のファイルパスを調整できます.
+	 * ContentScaleFactorの値に応じ、使用する画像を切り替えるなどの用途に使用できます.
+	 *
+	 * ContentScaleFactorの値に応じ、読み込む画像を切り替えるには、
+	 * 以下のようなImagePathGeneratorを実装し、このメソッドで設定してください。
+     * @code
+	 * static std::string imagePathGenerator(const char* imageName, const char* imageDir)
+	 * {
+	 *   std::string path;
+	 *   if (imageDir)
+	 *   {
+	 * 	   path.append(imageDir);
+	 * 	   size_t pathLen = path.length();
+	 *     if (pathLen && path.at(pathLen-1) != '/' && path.at(pathLen-1) != '\\')
+	 * 	   {
+	 * 	     path.append("/");
+	 * 	   }
+	 *   }
+	 *
+	 *   float csf = CCDirector::sharedDirector()->getContentScaleFactor();
+	 *   // ContentScaleFactorの値により読み込み先ディレクトリを変更する
+	 *   if (csf >= 2.0f)
+	 *   {
+	 *     path.append("hd/");
+	 *   }
+	 *   else
+	 *   {
+	 *     path.append("sd/");
+	 *   }
+	 *
+	 *   path.append(imageName);
+	 *   return path;
+	 * }
+	 *
+	 * --
+	 *
+	 * SSImageList::setImagePathGenerator(imagePathGenerator);
+	 *
+     * @endcode
+	 */
+	static void setImagePathGenerator(ImagePathGenerator generator);
+
+	/**
+	 * 標準のImagePathGeneratorです.
+	 *
+	 * 中身は以下の通りです.
+     * @code
+	 * std::string SSImageList::defaultImagePathGenerator(const char* imageName, const char* imageDir)
+	 * {
+	 *   std::string path;
+	 *   if (imageDir)
+	 *   {
+	 * 	   path.append(imageDir);
+	 * 	   size_t pathLen = path.length();
+	 *     if (pathLen && path.at(pathLen-1) != '/' && path.at(pathLen-1) != '\\')
+	 * 	   {
+	 * 	     path.append("/");
+	 * 	   }
+	 *   }
+	 *   path.append(imageName);
+	 *   return path;
+	 * }
+     * @endcode
+	 */
+	static std::string defaultImagePathGenerator(const char* imageName, const char* imageDir);
 
 public:
 	SSImageList(void);
@@ -62,6 +132,8 @@ protected:
 	void addTexture(const char* imageName, const char* imageDir);
 
 	cocos2d::CCArray	m_imageList;
+	
+	static ImagePathGenerator	s_generator;
 };
 
 
@@ -96,6 +168,9 @@ struct SSUserData
 class SSPlayer : public cocos2d::CCSprite
 {
 public:
+	typedef void (cocos2d::CCObject::*SEL_PlayEndHandler)(SSPlayer*);
+
+public:
 	/** SSPlayerを生成します.
 	 *  Create a SSPlayer object.
 	 */
@@ -104,12 +179,16 @@ public:
 	/** SSPlayerを生成し、アニメーションを設定します.
 	 *  Create a SSPlayer object, and set animation.
 	 */
-	static SSPlayer* create(const SSData* ssData, SSImageList* imageList);
+	static SSPlayer* create(const SSData* ssData, SSImageList* imageList, int loop = 0);
 
 	/** アニメーションを設定します.
 	 *  Set animation.
 	 */
-	void setAnimation(const SSData* ssData, SSImageList* imageList);
+	void setAnimation(const SSData* ssData, SSImageList* imageList, int loop = 0);
+
+	/** 設定されているアニメーションを返します.
+	 */
+	const SSData* getAnimation() const;
 
 	/** 再生フレームNoを取得します.
 	 *  Get frame no of playing.
@@ -165,6 +244,19 @@ public:
 	 *  Set delegate. receive a notification, such as user data.
 	 */
 	void setDelegate(SSPlayerDelegate* delegate);
+
+	/** 再生終了の通知を受けるコールバックを設定します.
+	 *
+     *  @code
+	 *  player->setPlayEndCallback(this, ssplayer_playend_selector(MyScene::playEndCallback));
+	 *  --
+	 *  void MyScene::playEndCallback(SSPlayer* player)
+	 *  {
+	 *    ...
+	 *  }
+     *  @endcode
+	 */
+	void setPlayEndCallback(cocos2d::CCObject* target, SEL_PlayEndHandler selector);
 
 
 	/** パーツの状態を示します.
@@ -226,6 +318,8 @@ protected:
 	bool				m_frameSkipEnabled;
 	SSPlayerDelegate*	m_delegate;
 	SSUserData			m_userData;
+	CCObject*			m_playEndTarget;
+	SEL_PlayEndHandler	m_playEndSelector;
 
 	SSPlayerBatch*		m_batch;
 	cocos2d::CCArray	m_batchSprites;
@@ -243,6 +337,8 @@ protected:
 	bool				m_ssPlayerFlipY;
 };
 
+
+#define ssplayer_playend_selector(_SELECTOR) (SSPlayer::SEL_PlayEndHandler)(&_SELECTOR)
 
 
 /**

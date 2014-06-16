@@ -178,7 +178,7 @@ struct Context
 	const bool				sourceFormatMode;
 	const bool				binaryFormatMode;
 	const textenc::Encoding	outEncoding;
-	const bool				useTragetAffineTransformation;
+	const Cocos2dSaver::Options	options;
 
 	const std::string		prefix;
 	const std::string		dataBase;
@@ -186,13 +186,13 @@ struct Context
 	const std::string		frameDataLabel;
 	const std::string		partDataLabel;
 
-	Context(std::ostream& out, bool binaryFormatMode, textenc::Encoding outEncoding, bool useTragetAffineTransformation, const std::string& prefix)
+	Context(std::ostream& out, bool binaryFormatMode, textenc::Encoding outEncoding, const Cocos2dSaver::Options& options, const std::string& prefix)
 		: out(out)
 		, bout(out)
 		, sourceFormatMode(!binaryFormatMode)
 		, binaryFormatMode(binaryFormatMode)
 		, outEncoding(outEncoding)
-		, useTragetAffineTransformation(useTragetAffineTransformation)
+		, options(options)
 		
 		, prefix(prefix)
 		, dataBase((format("%1%_partsData") % prefix).str())
@@ -224,13 +224,13 @@ void Cocos2dSaver::save(
 	std::ostream& out,
 	bool binaryFormatMode,
 	textenc::Encoding outEncoding,
-	bool useTragetAffineTransformation,
+	const Options& options,
 	ss::SsMotion::Ptr motion,
 	ss::SsImageList::ConstPtr optImageList, 
 	const std::string& prefixLabel,
 	const std::string& creatorComment)
 {
-	Context context(out, binaryFormatMode, outEncoding, useTragetAffineTransformation, prefixLabel);
+	Context context(out, binaryFormatMode, outEncoding, options, prefixLabel);
 	
 	// データ起点
 	if (context.sourceFormatMode)
@@ -290,7 +290,7 @@ void writeParts(Context& context, ss::SsMotion::Ptr motion)
 	SsMotionFrameDecoder::InheritCalcuationType inheritCalc = SsMotionFrameDecoder::InheritCalcuation_Calculate;
 
 	// アフィン変換をCocos2d-x側で行う場合
-	if (context.useTragetAffineTransformation)
+	if (context.options.useTragetAffineTransformation)
 	{
 		// アフィン変換を行うことを設定
 		ssDataFlags |= SS_DATA_FLAG_USE_AFFINE_TRANS;
@@ -373,7 +373,7 @@ void writeParts(Context& context, ss::SsMotion::Ptr motion)
 
 
 		// 継承計算を行う場合、表示されないものはリストから削除する
-		if (!context.useTragetAffineTransformation)
+		if (!context.options.useTragetAffineTransformation)
 		{
 			std::vector<SsMotionFrameDecoder::FrameParam>::iterator removes =
 				std::remove_if(r.begin(), r.end(), isInvisiblePart);
@@ -994,9 +994,13 @@ void writeImageList(Context& context, ss::SsImageList::ConstPtr imageList)
 	{
 		int index = image->getId();
 		std::string label = (format("%1%_image_%2%") % context.prefix % index).str();
-		// ファイル名部のみ出力 
 		boost::filesystem::path path = image->getPath();
-		boost::filesystem::path filename = path.filename();
+		boost::filesystem::path filename = path;
+		if (!context.options.notModifyImagePath)
+		{
+			// ファイル名部のみ出力
+			filename = path.filename();
+		}
 
 		if (context.sourceFormatMode)
 		{

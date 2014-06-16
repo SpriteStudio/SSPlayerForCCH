@@ -335,11 +335,11 @@ namespace
         return SsRect::intersect(rect, imageRect);
     }
 
-    static SsPoint getPosition(const SsMotionFrameDecoder::FrameParam& param)
+    static SsPointF getPosition(const SsMotionFrameDecoder::FrameParam& param)
     {
-        return SsPoint(
-            (int)param.posx.value,
-            (int)param.posy.value
+        return SsPointF(
+            param.posx.value,
+            param.posy.value
             );
     }
 
@@ -380,7 +380,7 @@ static void writeFrameParam(std::ostream& out, const SsMotionFrameDecoder::Frame
 		}
 	}
 
-	SsPoint position = getPosition(param);
+	SsPointF position = getPosition(param);
 	SsPoint origin   = getOrigin(param);
 
 	// 回転角はラジアン 
@@ -399,8 +399,8 @@ static void writeFrameParam(std::ostream& out, const SsMotionFrameDecoder::Frame
 	params.addInt(souRect.getTop());
 	params.addInt(souRect.getWidth());
 	params.addInt(souRect.getHeight());
-	params.addInt(position.x);
-	params.addInt(position.y);
+	params.addFloat(position.x);
+	params.addFloat(position.y);
 
 	params.addFloat(angle);
 	params.addFloat(param.scax.value);
