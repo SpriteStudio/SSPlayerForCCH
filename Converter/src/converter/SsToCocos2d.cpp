@@ -31,7 +31,7 @@ using boost::shared_ptr;
 
 
 static const char* APP_NAME		= "SsToCocos2d";
-static const char* APP_VERSION	= "1.0.5 (Build: " __DATE__ " " __TIME__ ")";
+static const char* APP_VERSION	= "1.0.6 (Build: " __DATE__ " " __TIME__ ")";
 
 
 /** 使用方法を出力 */

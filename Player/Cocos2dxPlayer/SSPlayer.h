@@ -240,6 +240,14 @@ public:
 	 */
 	bool isFrameSkipEnabled() const;
 
+	/** trueを設定するとX,Y座標を整数値として扱います（小数部を切り捨てます）
+	 */
+	void setIntegerPositionEnabled(bool enabled);
+
+	/** setIntegerPositionEnabled()で設定されている状態を返します
+	 */
+	bool isIntegerPositionEnabled() const;
+
 	/** ユーザーデータなどの通知を受け取る、デリゲートを設定します.
 	 *  Set delegate. receive a notification, such as user data.
 	 */
@@ -289,6 +297,7 @@ public:
 	virtual float	getScaleY();
 	virtual float	getScale();
 
+
 public:
 	SSPlayer(void);
 	virtual ~SSPlayer();
@@ -316,6 +325,7 @@ protected:
 	class SSDataHandle*	m_ssDataHandle;
 	SSImageList*		m_imageList;
 	bool				m_frameSkipEnabled;
+	bool				m_integerPositionEnabled;
 	SSPlayerDelegate*	m_delegate;
 	SSUserData			m_userData;
 	CCObject*			m_playEndTarget;

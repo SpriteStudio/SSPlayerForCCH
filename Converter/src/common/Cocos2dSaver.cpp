@@ -26,8 +26,9 @@ namespace {
 	static const int		FormatVersion_2 = 2;
 	static const int		FormatVersion_3 = 3;		// 2013/10/30 パーツデータに、パーツタイプ、αブレンド方法を追加
 	static const int		FormatVersion_4 = 4;		// 2013/11/21 Cocos2d-xでアフィン変換を行うための情報を追加
+	static const int		FormatVersion_5 = 5;		// 2014/07/10 X,Y座標の精度をshortからfloatに変更
 
-	static const int		CurrentFormatVersion = FormatVersion_4;
+	static const int		CurrentFormatVersion = FormatVersion_5;
 
 
 
@@ -700,11 +701,11 @@ namespace
         return SsRect(left, top, right, bottom);
     }
 
-    static SsPoint getPosition(const SsMotionFrameDecoder::FrameParam& param)
+    static SsPointF getPosition(const SsMotionFrameDecoder::FrameParam& param)
     {
-        return SsPoint(
-            (int)param.posx.value,
-            (int)param.posy.value
+        return SsPointF(
+            param.posx.value,
+            param.posy.value
             );
     }
 
@@ -833,9 +834,9 @@ static int writeFrameParam(Context& context, const SsMotionFrameDecoder::FramePa
 {
 	SsNode::ConstPtr node = param.node;
 
-	SsRect  souRect  = getPicRect(param);
-	SsPoint position = getPosition(param);
-	SsPoint origin   = getOrigin(param);
+	SsRect   souRect  = getPicRect(param);
+	SsPointF position = getPosition(param);
+	SsPoint  origin   = getOrigin(param);
 
 #if 0   // ※Cocos2dの親子階層に沿う形でコンバートする要望が出たときに使えるかもしれないコード
 	if (parentageEnabled && !param.node->isRoot())
@@ -899,8 +900,8 @@ static int writeFrameParam(Context& context, const SsMotionFrameDecoder::FramePa
 	w.writeShort(souRect.getTop());
 	w.writeShort(souRect.getWidth());
 	w.writeShort(souRect.getHeight());
-	w.writeShort(position.x);
-	w.writeShort(position.y);
+	w.writeFloat(position.x);
+	w.writeFloat(position.y);
 
 	if (flags & SS_PART_FLAG_ORIGIN_X) w.writeShort(origin.x);
 	if (flags & SS_PART_FLAG_ORIGIN_Y) w.writeShort(origin.y);

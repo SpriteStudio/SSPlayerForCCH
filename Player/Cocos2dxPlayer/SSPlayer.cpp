@@ -73,7 +73,7 @@ using namespace cocos2d;
 
 static const ss_u32 SSDATA_ID_0 = 0xffffffff;
 static const ss_u32 SSDATA_ID_1 = 0x53534241;
-static const ss_u32 SSDATA_VERSION = 4;
+static const ss_u32 SSDATA_VERSION = 5;
 
 
 
@@ -616,7 +616,7 @@ SSPlayer::SSPlayer(void)
 	, m_ssPlayerScaleY( 1.0f )
 	, m_ssPlayerFlipX( false )
 	, m_ssPlayerFlipY( false )
-
+	, m_integerPositionEnabled(false)
 {
 }
 
@@ -913,6 +913,16 @@ bool SSPlayer::isFrameSkipEnabled() const
 	return m_frameSkipEnabled;
 }
 
+void SSPlayer::setIntegerPositionEnabled(bool enabled)
+{
+	m_integerPositionEnabled = enabled;
+}
+
+bool SSPlayer::isIntegerPositionEnabled() const
+{
+	return m_integerPositionEnabled;
+}
+
 void SSPlayer::setDelegate(SSPlayerDelegate* delegate)
 {
 	m_delegate = delegate;
@@ -983,8 +993,14 @@ void SSPlayer::setFrame(int frameNo)
 		int sy = r.readS16();
 		int sw = r.readS16();
 		int sh = r.readS16();
-		int dx = r.readS16();
-		int dy = r.readS16();
+		float dx = r.readFloat();
+		float dy = r.readFloat();
+
+		if (m_integerPositionEnabled)
+		{
+			dx = (int)dx;
+			dy = (int)dy;
+		}
 
 		int ox = (flags & SS_PART_FLAG_ORIGIN_X) ? r.readS16() : sw / 2;
 		int oy = (flags & SS_PART_FLAG_ORIGIN_Y) ? r.readS16() : sh / 2;
