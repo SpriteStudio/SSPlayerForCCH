@@ -1,0 +1,24 @@
+[SpriteStudio]
+Application=SpriteStudio 4
+Version=400
+[File]
+BaseImage001=.\antarctic.png
+Animation001=.\antarctic3_anime_1.ssax
+[Animation_Screen]
+ScreenW=160
+ScreenH=160
+MarginX=160
+MarginY=160
+BGColor=0xFF323232
+BGImagePos=0
+BGImageTile=0
+BGImage=
+[Animation_Transparent]
+Direct_TransType=0
+Direct_TransColor=0x00000000
+Index_TransType=0
+IcTransIndex=0
+DefaultBlendType=0
+SkipRestFrames=0
+[Animation_Other]
+UseImageFlip=1

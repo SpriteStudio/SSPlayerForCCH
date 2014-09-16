@@ -1,0 +1,9 @@
+[SpriteStudio]
+Application=SpriteStudio 4
+Version=400
+[Source]
+list_max=4
+1=.\face.png
+2=.\hair.png
+3=.\clothes1.png
+4=.\clothes2.png

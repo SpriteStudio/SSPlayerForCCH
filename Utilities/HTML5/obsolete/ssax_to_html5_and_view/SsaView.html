@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS" />
-	<script type="text/javascript" src="../Player/SsaPlayer.js"></script>
+	<script type="text/javascript" src="../../../Player/Html5Player/Html5Player/SsaPlayer.js"></script>
 	<script type="text/javascript" src="./tmp/PackedData.js"></script>
 	
 	<script type="text/javascript">
@@ -12,7 +12,7 @@
 	        var ctx = a_canvas.getContext("2d");
 
 	        var imageList = new SsImageList(tmp_images, "./tmp/", true);
-	        var animation = new SsAnimation(tmp_ssa, imageList);
+	        var animation = new SsAnimation(tmp_animation, imageList);
 
 	        var sprite = new SsSprite(animation);
 	        sprite.setLoop(0);

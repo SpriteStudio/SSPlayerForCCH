@@ -1,0 +1,25 @@
+settings = {
+-- 端末の向き
+--	orientation = {
+-- 標準の端末の向き
+--		default = "landscapeRight",
+-- サポートする端末の向き
+--		supported = {
+--			"landscapeRight",
+--			"landscapeLeft",
+--		}
+--	},
+	iphone = {
+		plist= {
+			UIApplicationExitsOnSuspend = false,
+			UIStatusBarHidden = true,
+--			CFBundleIconFile = "Icon.png", -- 57x57
+--			CFBundleIconFiles = {
+--				"Icon.png",		-- 57x57
+--				"Icon@2x.png",	-- 114x114
+--				"Icon-72.png",	-- 72x72
+--			},
+--			MinimumOSVersion="4.0",
+		},
+	}
+}

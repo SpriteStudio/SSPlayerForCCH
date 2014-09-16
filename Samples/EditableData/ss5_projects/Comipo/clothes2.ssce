@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<SpriteStudioCellMap version="0.01.00">
+	<name>clothes2</name>
+	<exportPath></exportPath>
+	<imagePath>clothes2.png</imagePath>
+	<pixelSize>256 256</pixelSize>
+	<imagePathAtImport>L:/endo/NewSpriteStudio/TestProjects/ssax/comipo/clothes2.png</imagePathAtImport>
+	<packInfoFilePath></packInfoFilePath>
+	<texPackSettings>
+		<maxSize>4096 4096</maxSize>
+		<forcePo2>1</forcePo2>
+		<forceSquare>0</forceSquare>
+		<margin>0</margin>
+		<padding>1</padding>
+	</texPackSettings>
+	<cells/>
+</SpriteStudioCellMap>
