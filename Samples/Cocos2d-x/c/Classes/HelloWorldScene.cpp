@@ -88,7 +88,7 @@ bool HelloWorld::init()
 
 
 	//アニメーションをC配列から定義します。
-	m_ComipoImageList = SSImageList::create( attack_attack_images , "" );
+	m_ComipoImageList = SSImageList::create( attack_attack_images , "images\\" );
 	m_ComipoAnime = SSPlayer::create( &attack_attack_partsData, m_ComipoImageList);
 
     

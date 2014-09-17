@@ -1,10 +1,46 @@
-
+﻿
 #include "SSPlayer.h"
 #include "SSPlayerData.h"
 #include <cstring>
 #include <string>
 
 using namespace cocos2d;
+
+/*BatchNode使用改変説明
+
+例えば次のようなパーツを持つアニメーションデータについて、
+ 0 : a.png
+ 1 : a.png
+ 2 : a.png
+ 3 : b.png
+ 4 : b.png
+ 5 : a.png
+ 6 : b.png
+ 
+ SSPlayerに次のような構造のオブジェクトを生成し、描画を行う
+ 
+ SSPlayer
+  ├0:CCSpriteBatchNode(テクスチャa.pngをターゲット）
+  │　├0:CCSprite(0番目のパーツを描画）
+  │　├1:CCSprite(1番目のパーツを描画）
+  │　└2:CCSprite(2番目のパーツを描画）
+  ├1:CCSpriteBatchNode(テクスチャb.pngをターゲット）
+  │　├0:CCSprite(3番目のパーツを描画）
+  │　└1:CCSprite(4番目のパーツを描画）
+  └2:CCSpriteBatchNode(テクスチャa.pngをターゲット）
+  	　├0:CCSprite(5番目のパーツを描画）
+  	　└1:CCSprite(6番目のパーツを描画）
+ 
+ 0-2番目、3-4番目、5-6番目はそれぞれBatchNodeでまとめて描画されるため、
+ 高速に描画することが可能になる。
+ 0-2番目を描画しているバッチノードで5-6番目のテクスチャを描画してしまうと、
+ 表示順序が変わってしまい正しく表示できなくなってしまうため、
+ 別々のBatchNodeが必要になる。
+ 
+ 別々のテクスチャを使用したパーツが交互に重なるアニメーションの場合効果は無いが、
+ 同じテクスチャを使用しているパーツには効果大となる。
+ 
+**/
 
 
 // 独自Spriteクラスの使用可否定義
@@ -25,12 +61,19 @@ using namespace cocos2d;
 #define USE_CUSTOM_SPRITE		1		// (0:Not use, 1:Use)
 
 
+// ContentScaleFactorに合わせてUVを調整します
+// 有効にする場合、USE_CUSTOM_SPRITEも1である必要があります.
+#define ADJUST_UV_BY_CONTENT_SCALE_FACTOR	0	// (0:disable, 1:enable)
+
+
+
 /**
  * definition
  */
 
 static const ss_u32 SSDATA_ID_0 = 0xffffffff;
 static const ss_u32 SSDATA_ID_1 = 0x53534241;
+static const ss_u32 SSDATA_VERSION = 5;
 
 
 
@@ -97,7 +140,10 @@ public:
 	{
 		CCAssert(data->id[0] == SSDATA_ID_0, "Not id 0 matched.");
 		CCAssert(data->id[1] == SSDATA_ID_1, "Not id 1 matched.");
+		CCAssert(data->version == SSDATA_VERSION, "Version number of data does not match.");
 	}
+	
+	const SSData* getData() const { return m_data; }
 	
 	ss_u32 getFlags() const { return m_data->flags; }
 	int getNumParts() const { return m_data->numParts; }
@@ -317,9 +363,7 @@ CCTexture2D* SSImageList::getTexture(size_t index)
 
 void SSImageList::addTexture(const char* imageName, const char* imageDir)
 {
-	std::string path;
-	if (imageDir) path.append(imageDir);
-	path.append(imageName);
+	std::string path = s_generator(imageName, imageDir);
 	
 	CCTextureCache* texCache = CCTextureCache::sharedTextureCache();
 	CCTexture2D* tex = texCache->addImage(path.c_str());
@@ -328,8 +372,64 @@ void SSImageList::addTexture(const char* imageName, const char* imageDir)
 		CCLOG("image load failed: %s", path.c_str());
 		CC_ASSERT(0);
 	}
+	CCLOG("Load image: %s", path.c_str());
 	m_imageList.addObject(tex);
 }
+
+std::string SSImageList::defaultImagePathGenerator(const char* imageName, const char* imageDir)
+{
+	std::string path;
+	if (imageDir)
+	{
+		path.append(imageDir);
+		size_t pathLen = path.length();
+		if (pathLen && path.at(pathLen-1) != '/' && path.at(pathLen-1) != '\\')
+		{
+			path.append("/");
+		}
+	}
+	path.append(imageName);
+	return path;
+}
+
+/*
+static std::string exampleImagePathGenerator(const char* imageName, const char* imageDir)
+{
+	std::string path;
+	if (imageDir)
+	{
+		path.append(imageDir);
+		size_t pathLen = path.length();
+		if (pathLen && path.at(pathLen-1) != '/' && path.at(pathLen-1) != '\\')
+		{
+			path.append("/");
+		}
+	}
+
+	float csf = CCDirector::sharedDirector()->getContentScaleFactor();
+	// ContentScaleFactorの値により読み込み先ディレクトリを変更する
+	if (csf >= 2.0f)
+	{
+		path.append("hd/");
+	}
+	else
+	{
+		path.append("sd/");
+	}
+
+	path.append(imageName);
+	return path;
+}
+*/
+
+SSImageList::ImagePathGenerator SSImageList::s_generator = SSImageList::defaultImagePathGenerator;
+
+void SSImageList::setImagePathGenerator(ImagePathGenerator generator)
+{
+	s_generator = generator;
+}
+
+
 
 
 
@@ -343,36 +443,51 @@ public:
 	SSPartState();
 	virtual ~SSPartState();
 
-	float getPositionX() const;
-	float getPositionY() const;
+	void init();
+	void copyParameters(SSPlayer::PartState& state) const;	
 
 private:
 	friend class SSPlayer;
 
 	float	m_x;
 	float	m_y;
+	float	m_scaleX;
+	float	m_scaleY;
+	float	m_rotation;
+	cocos2d::CCSprite*	m_sprite;
+	CCAffineTransform	m_trans;
 };
 
 SSPartState::SSPartState()
-	: m_x(0), m_y(0)
 {
 	this->autorelease();
+	init();
 }
 
 SSPartState::~SSPartState()
 {
 }
 
-float SSPartState::getPositionX() const
+void SSPartState::init()
 {
-	return m_x;
+	m_x = 0;
+	m_y = 0;
+	m_scaleX = 1.0f;
+	m_scaleY = 1.0f;
+	m_rotation = 0.0f;
+	m_sprite = NULL;
+	m_trans = CCAffineTransformMakeIdentity();
 }
 
-float SSPartState::getPositionY() const
+void SSPartState::copyParameters(SSPlayer::PartState& state) const
 {
-	return m_y;
+	state.x = m_x;
+	state.y = m_y;
+	state.scaleX = m_scaleX;
+	state.scaleY = m_scaleY;
+	state.rotation = m_rotation;
+	state.sprite = m_sprite;
 }
-
 
 
 
@@ -405,6 +520,10 @@ public:
 	// override
 	virtual void draw(void);
 	virtual void setOpacity(GLubyte opacity);
+
+#if ADJUST_UV_BY_CONTENT_SCALE_FACTOR
+	virtual void setVertexRect(const CCRect& rect);
+#endif
 	
 	// original functions
 	void changeShaderProgram(bool useCustomShaderProgram);
@@ -424,6 +543,8 @@ public:
 enum {
 	SS_DATA_FLAG_USE_VERTEX_OFFSET	= 1 << 0,
 	SS_DATA_FLAG_USE_COLOR_BLEND	= 1 << 1,
+	SS_DATA_FLAG_USE_ALPHA_BLEND	= 1 << 2,
+	SS_DATA_FLAG_USE_AFFINE_TRANS	= 1 << 3,
 
 	NUM_SS_DATA_FLAGS
 };
@@ -431,6 +552,7 @@ enum {
 enum {
 	SS_PART_FLAG_FLIP_H				= 1 << 0,
 	SS_PART_FLAG_FLIP_V				= 1 << 1,
+	SS_PART_FLAG_INVISIBLE			= 1 << 2,
 	
 	SS_PART_FLAG_ORIGIN_X			= 1 << 4,
 	SS_PART_FLAG_ORIGIN_Y			= 1 << 5,
@@ -487,13 +609,15 @@ SSPlayer::SSPlayer(void)
 	, m_imageList(0)
 	, m_frameSkipEnabled(true)
 	, m_delegate(0)
+	, m_playEndTarget(NULL)
+	, m_playEndSelector(NULL)
+	, m_batch(0)
 	, m_ssPlayerScaleX( 1.0f )
 	, m_ssPlayerScaleY( 1.0f )
 	, m_ssPlayerFlipX( false )
 	, m_ssPlayerFlipY( false )
-
+	, m_integerPositionEnabled(false)
 {
-
 }
 
 SSPlayer* SSPlayer::create()
@@ -508,12 +632,12 @@ SSPlayer* SSPlayer::create()
 	return NULL;
 }
 	
-SSPlayer* SSPlayer::create(const SSData* ssData, SSImageList* imageList)
+SSPlayer* SSPlayer::create(const SSData* ssData, SSImageList* imageList, int loop)
 {
 	SSPlayer* player = create();
 	if (player)
 	{
-		player->setAnimation(ssData, imageList);
+		player->setAnimation(ssData, imageList, loop);
 	}
 	return player;
 }
@@ -538,27 +662,36 @@ bool SSPlayer::init()
 
 void SSPlayer::allocParts(int numParts, bool useCustomShaderProgram)
 {
+	//BatchNodeの数はパーツ数ではなく、構造によって変わってくるので、setFrameメソッドで動的に行う
+	//ここではインスタンスは生成せず、削除のみを行う
+	//パーツ数が同じでも構造が違えばBatchNodeの数は変わってくるので、
+	//以前のパーツ数に関わらず子要素を全て削除する
+	this->removeAllChildrenWithCleanup(true);
 	if (m_partStates.count() != numParts)
 	{
 		// 既存パーツ解放
 		// release old parts.
-		releaseParts();
+		m_partStates.removeAllObjects();
 
-		// パーツ数だけCCSpriteとSSPartStateを作成する
-		// create CCSprite objects and SSPartState objects.
+		m_jointSprites.removeAllObjects();
+		m_batchSprites.removeAllObjects();
+
+		// パーツ数だけSPartStateを作成する
+		// create SSPartState objects.
 		for (int i = 0; i < numParts; i++)
 		{
-			#if USE_CUSTOM_SPRITE
-			SSSprite* pSprite = SSSprite::create();
-			pSprite->changeShaderProgram(useCustomShaderProgram);
-			#else
-			CCSprite* pSprite = CCSprite::create();
-			#endif
-			
-			this->addChild(pSprite);
-
 			SSPartState* state = new SSPartState();
 			m_partStates.addObject(state);
+		}
+	}
+	else
+	{
+		// SPartState初期化
+		// initialize SPartState objects.
+		for (int i = 0; i < numParts; i++)
+		{
+			SSPartState* partState = static_cast<SSPartState*>( m_partStates.objectAtIndex(i) );
+			partState->init();
 		}
 	}
 }
@@ -571,6 +704,9 @@ void SSPlayer::releaseParts()
 	// パーツステートオブジェクトを全て削除
 	// remove parts status objects.
 	m_partStates.removeAllObjects();
+	
+	m_jointSprites.removeAllObjects();
+	m_batchSprites.removeAllObjects();
 }
 
 bool SSPlayer::hasAnimation() const
@@ -587,11 +723,12 @@ void SSPlayer::clearAnimation()
 	m_imageList = 0;
 }
 
-void SSPlayer::setAnimation(const SSData* ssData, SSImageList* imageList)
+void SSPlayer::setAnimation(const SSData* ssData, SSImageList* imageList, int loop)
 {
 	CCAssert(ssData != NULL, "zero is ssData pointer");
 	CCAssert(imageList != NULL, "zero is imageList pointer");
 
+	this->unscheduleUpdate();//既存のSSPlayerに別のSSDataを読みこませようとすると落ちるので追加
 	clearAnimation();
 
 	SSDataHandle* dataHandle = new SSDataHandle(ssData);
@@ -609,20 +746,34 @@ void SSPlayer::setAnimation(const SSData* ssData, SSImageList* imageList)
 
 	m_playingFrame = 0.0f;
 	m_step = 1.0f;
-	m_loop = 0;
+	m_loop = loop;
 	m_loopCount = 0;
 
-	setFrame(0);
+	if (!m_batch)
+	{
+		setFrame(0);
+		this->scheduleUpdate();
+	}
+}
 
-	this->scheduleUpdate();
+const SSData* SSPlayer::getAnimation() const
+{
+	return m_ssDataHandle->getData();
 }
 
 void SSPlayer::update(float dt)
 {
-//	CCLOG("%f", dt);
+	if (!m_batch)
+	{
+		updateFrame(dt);
+	}
+}
 
+void SSPlayer::updateFrame(float dt)
+{
 	if (!hasAnimation()) return;
-
+	
+	bool playEnd = false;
 	if (m_loop == 0 || m_loopCount < m_loop)
 	{
 		// フレームを進める.
@@ -632,7 +783,7 @@ void SSPlayer::update(float dt)
 		float fdt = m_frameSkipEnabled ? dt : CCDirector::sharedDirector()->getAnimationInterval();
 		float s = fdt / (1.0f / m_ssDataHandle->getFps());
 		
-		if (!m_frameSkipEnabled) CCLOG("%f", s);
+		//if (!m_frameSkipEnabled) CCLOG("%f", s);
 		
 		float next = m_playingFrame + (s * m_step);
 
@@ -656,6 +807,7 @@ void SSPlayer::update(float dt)
 					{
 						// 再生終了.
 						// play end.
+						playEnd = true;
 						break;
 					}
 					
@@ -684,6 +836,7 @@ void SSPlayer::update(float dt)
 					{
 						// 再生終了.
 						// play end.
+						playEnd = true;
 						break;
 					}
 				
@@ -701,6 +854,11 @@ void SSPlayer::update(float dt)
 	}
 
 	setFrame(getFrameNo());
+
+	if (playEnd && m_playEndTarget)
+	{
+		(m_playEndTarget->*m_playEndSelector)(this);
+	}
 }
 
 int SSPlayer::getFrameNo() const
@@ -755,9 +913,27 @@ bool SSPlayer::isFrameSkipEnabled() const
 	return m_frameSkipEnabled;
 }
 
+void SSPlayer::setIntegerPositionEnabled(bool enabled)
+{
+	m_integerPositionEnabled = enabled;
+}
+
+bool SSPlayer::isIntegerPositionEnabled() const
+{
+	return m_integerPositionEnabled;
+}
+
 void SSPlayer::setDelegate(SSPlayerDelegate* delegate)
 {
 	m_delegate = delegate;
+}
+
+void SSPlayer::setPlayEndCallback(CCObject* target, SEL_PlayEndHandler selector)
+{
+	CC_SAFE_RELEASE(m_playEndTarget);
+	CC_SAFE_RETAIN(target);
+	m_playEndTarget = target;
+	m_playEndSelector = selector;
 }
 
 bool SSPlayer::getPartState(SSPlayer::PartState& result, const char* name)
@@ -768,22 +944,47 @@ bool SSPlayer::getPartState(SSPlayer::PartState& result, const char* name)
 		if (index >= 0 && index < static_cast<int>(m_partStates.count()))
 		{
 			const SSPartState* partState = static_cast<SSPartState*>( m_partStates.objectAtIndex(index) );
-			result.x = partState->getPositionX();
-			result.y = partState->getPositionY();
+			partState->copyParameters(result);
 			return true;
 		}
 	}
 	return false;
 }
 
-
 void SSPlayer::setFrame(int frameNo)
 {
 	setChildVisibleAll(false);
 
+	// αブレンドでmix以外を使用、カラーブレンド、頂点変形が必要なものはバッチノードを使わず描画する
+	bool useCustomSprite = (m_ssDataHandle->getFlags() & (SS_DATA_FLAG_USE_ALPHA_BLEND | SS_DATA_FLAG_USE_COLOR_BLEND | SS_DATA_FLAG_USE_VERTEX_OFFSET)) != 0;
+	// カラーブレンドはカスタムシェーダーを使用する
+	bool useCustomShaderProgram = (m_ssDataHandle->getFlags() & SS_DATA_FLAG_USE_COLOR_BLEND) != 0;
+	// アフィン変換の有無
+	bool useAffineTransformation = (m_ssDataHandle->getFlags() & SS_DATA_FLAG_USE_AFFINE_TRANS) != 0;
+
+
 	const SSFrameData* frameData = &(m_ssDataHandle->getFrameData()[frameNo]);
 	size_t numParts = static_cast<size_t>(frameData->numParts);
 	SSDataReader r( static_cast<const ss_u16*>( m_ssDataHandle->getAddress(frameData->partFrameData)) );
+	int nodeIndex = 0;//SSPlayerの子要素のCCSpriteBatchNodeのインデックス
+	int spriteIndex = 0;//CCSpriteBatchNodeの子要素のスプライトのIndex
+
+
+	CCNode* parentNode = NULL;
+	CCSprite* jointNode = NULL;
+	int jointNodeIndex = -1;
+	bool jointToParentBatchNode = false;
+	
+	if (m_batch)
+	{
+		for (size_t i = 0; i < m_jointSprites.count(); i++)
+		{
+			CCNode* jointNode = (CCNode*)m_jointSprites.objectAtIndex(i);
+			jointNode->removeAllChildrenWithCleanup(false);
+		}
+	}
+
+
 	for (size_t i = 0; i < numParts; i++)
 	{
 		unsigned int flags = r.readU32();
@@ -792,8 +993,14 @@ void SSPlayer::setFrame(int frameNo)
 		int sy = r.readS16();
 		int sw = r.readS16();
 		int sh = r.readS16();
-		int dx = r.readS16();
-		int dy = r.readS16();
+		float dx = r.readFloat();
+		float dy = r.readFloat();
+
+		if (m_integerPositionEnabled)
+		{
+			dx = (int)dx;
+			dy = (int)dy;
+		}
 
 		int ox = (flags & SS_PART_FLAG_ORIGIN_X) ? r.readS16() : sw / 2;
 		int oy = (flags & SS_PART_FLAG_ORIGIN_Y) ? r.readS16() : sh / 2;
@@ -803,23 +1010,227 @@ void SSPlayer::setFrame(int frameNo)
 		float scaleY = (flags & SS_PART_FLAG_SCALE_Y) ? r.readFloat() : 1.0f;
 		int opacity = (flags & SS_PART_FLAG_OPACITY) ? r.readU16() : 255;
 	
+		SSPartState* partState = static_cast<SSPartState*>( m_partStates.objectAtIndex(partNo) );
+		partState->m_sprite = NULL;
+		
+		// パーツの基本情報を取得
+		const SSPartData* partData = &m_ssDataHandle->getPartData()[partNo];
+		size_t imageNo = partData->imageNo;
+		CCTexture2D* tex = m_imageList->getTexture(imageNo);//このパーツの描画に使用するテクスチャ
+		if(!tex){ continue; }
+		SSPartType partType = static_cast<SSPartType>(partData->type);
+
 		#if USE_CUSTOM_SPRITE
-		SSSprite* sprite = static_cast<SSSprite*>( m_pChildren->objectAtIndex(i) );
+		SSSprite* sprite;
 		#else
-		CCSprite* sprite = static_cast<CCSprite*>( m_pChildren->objectAtIndex(i) );
+		CCSprite* sprite;
 		#endif
 
-		SSPartState* partState = static_cast<SSPartState*>( m_partStates.objectAtIndex(partNo) );
-		size_t imageNo = m_ssDataHandle->getPartData()[partNo].imageNo;
+		//SSPlayerの子要素数を取得。m_pChildrenは遅延生成されるためNULLチェック必須
+		int childrenCount;
+		if( m_pChildren ){ childrenCount = m_pChildren->count(); } else { childrenCount =  0; }
+		
+		bool setBlendEnabled = false;
 
+		if (m_batch)
+		{
+			//bool useBatchNode = !useCustomSprite;
+			bool useBatchNode =
+				(flags & SS_PART_FLAGS_VERTEX_OFFSET) == 0 &&
+				partData->alphaBlend == kSSPartAlphaBlendMix &&
+				!useCustomShaderProgram;
+			
+			// 次のとき新たな親ノードを取得
+			bool changeParentNode =
+				(!parentNode) ||
+				(useBatchNode != jointToParentBatchNode) ||
+				(jointToParentBatchNode && jointNode->getTexture() != tex);
+		
+			if (changeParentNode)
+			{
+				m_batch->getNode(parentNode, useBatchNode, tex);
+				
+				jointNodeIndex++;
+				if (jointNodeIndex >= m_jointSprites.count())
+				{
+					jointNode = CCSprite::createWithTexture(tex);
+					jointNode->setTextureRect(CCRect(0, 0, 0, 0));
+					m_jointSprites.addObject(jointNode);
+				}
+				else
+				{
+					jointNode = (CCSprite*)m_jointSprites.objectAtIndex(jointNodeIndex);
+					jointNode->setTexture(tex);
+				}
+				
+				jointNode->setPositionX(this->getPositionX());
+				jointNode->setPositionY(this->getPositionY());
+				jointNode->setScaleX(this->m_fScaleX);
+				jointNode->setScaleY(this->m_fScaleY);
+				jointNode->setRotation(this->getRotation());
+				jointNode->setOpacity(this->getOpacity());
+				
+				parentNode->addChild(jointNode);
+				jointToParentBatchNode = useBatchNode;
+			}
+		
+		
+			childrenCount = m_batchSprites.count();
+			if (childrenCount <= i) {
+#if USE_CUSTOM_SPRITE
+				sprite =  SSSprite::create();
+				sprite->changeShaderProgram(useCustomShaderProgram);
+				sprite->setTexture(tex);
+#else
+				sprite = CCSprite::createWithTexture(tex);
+#endif
+				m_batchSprites.addObject(sprite);
+			} else {
+#if USE_CUSTOM_SPRITE
+				sprite = static_cast<SSSprite*>( m_batchSprites.objectAtIndex(i) );
+#else
+				sprite = static_cast<CCSprite*>( m_batchSprites.objectAtIndex(i) );
+#endif
+				sprite->setTexture(tex);
+			}
+			
+			jointNode->addChild(sprite);
 
-		CCTexture2D* tex = m_imageList->getTexture(imageNo);
-        if (tex == NULL) continue;
-		sprite->setTexture(tex);
+			// ブレンド方法を設定する
+			setBlendEnabled = true;
+
+		}
+		else if (!useCustomSprite)
+		{
+			//-------------------------------------------------------------
+			//texと同じテクスチャを持っているバッチノードを探す
+			//-------------------------------------------------------------
+			CCSpriteBatchNode* node = NULL;//描画に使用するバッチノード
+			if( nodeIndex < childrenCount ){
+				//nodeIndexが指しているバッチノードが存在する
+				//texと同じテクスチャを持っているか調べる
+				node = static_cast<CCSpriteBatchNode*>( getChildren()->objectAtIndex(nodeIndex) );
+				if( node->getTexture() != tex ){
+					//描画したいテクスチャと同じテクスチャを持つバッチノードを順に検索する
+					spriteIndex = 0;//バッチノードが変わるのでスプライトのインデックスを初期化
+					do{
+						++nodeIndex;
+						if( nodeIndex == childrenCount ){
+							//texを使用するバッチノードは見つからなかった
+							node = NULL;
+							break; 
+						}
+						//SSPlayerの子要素には全てCCSpriteBatchNodeがセットされているので、キャストして順に検索する
+						node = static_cast<CCSpriteBatchNode*>( getChildren()->objectAtIndex(nodeIndex));
+					}while(node->getTexture() != tex );
+				}
+			}
+			
+			//描画したいテクスチャを持つバッチノードが見つからなかった
+			//子要素の最後尾に新しくバッチノードを作成し、追加する
+			if( !node ){
+				node = CCSpriteBatchNode::createWithTexture(tex);
+				addChild(node);
+			}
+			
+			//使用するバッチノードが決まったので表示状態にする
+			node->setVisible(true);
+			
+			//このバッチノードの子要素の未使用スプライトを取得する
+			//未使用スプライトが足りない場合は新規作成する
+			CCArray* aNodeChildren = node->getChildren();
+			int nodeChildrenCount;
+			if( aNodeChildren ){ nodeChildrenCount = aNodeChildren->count(); } else { nodeChildrenCount =  0; }
+			if( nodeChildrenCount == spriteIndex ){
+				//スプライトの数が足りないのでバッチノードの子要素として新しく作成する
+#if USE_CUSTOM_SPRITE
+				sprite =  SSSprite::create();
+				sprite->setTexture(node->getTexture());
+				sprite->changeShaderProgram(useCustomShaderProgram);
+#else
+				sprite = CCSprite::createWithTexture(tex);
+#endif
+				node->addChild(sprite);
+			} else {
+				//バッチノードの子要素のスプライトの数は足りているので、未使用のスプライトを描画に使用する
+#if USE_CUSTOM_SPRITE
+				sprite = static_cast<SSSprite*>( node->getChildren()->objectAtIndex( spriteIndex ) );
+#else
+				sprite = static_cast<CCSprite*>( node->getChildren()->objectAtIndex( spriteIndex ) );
+#endif
+			}
+			//このノードの子要素のspiretIndex番目のスプライトは使用済みなので、インデックスをインクリメントする
+			++spriteIndex;
+		}
+		else {
+			// バッチノードを使わず描画
+			if (childrenCount <= i) {
+#if USE_CUSTOM_SPRITE
+				sprite =  SSSprite::create();
+				sprite->changeShaderProgram(useCustomShaderProgram);
+				sprite->setTexture(tex);
+#else
+				sprite = CCSprite::createWithTexture(tex);
+#endif
+				addChild(sprite);
+			} else {
+#if USE_CUSTOM_SPRITE
+				sprite = static_cast<SSSprite*>( m_pChildren->objectAtIndex(i) );
+#else
+				sprite = static_cast<CCSprite*>( m_pChildren->objectAtIndex(i) );
+#endif
+				sprite->setTexture(tex);
+			}
+
+			// ブレンド方法を設定する
+			setBlendEnabled = true;
+		}
+
+		
+		if (setBlendEnabled)
+		{
+			//
+			// ブレンド方法を設定
+			// 標準状態でMIXブレンド相当になります
+			// BlendFuncの値を変更することでブレンド方法を切り替えます
+			//
+			ccBlendFunc blendFunc = sprite->getBlendFunc();
+			if (!tex->hasPremultipliedAlpha())
+			{
+				blendFunc.src = GL_SRC_ALPHA;
+				blendFunc.dst = GL_ONE_MINUS_SRC_ALPHA;
+			}
+			else
+			{
+				blendFunc.src = CC_BLEND_SRC;
+				blendFunc.dst = CC_BLEND_DST;
+			}
+
+			// カスタムシェーダを使用する場合
+			if (useCustomShaderProgram) {
+				blendFunc.src = GL_SRC_ALPHA;
+			}
+			// 加算ブレンド
+			if (partData->alphaBlend == kSSPartAlphaBlendAddition) {
+				blendFunc.dst = GL_ONE;
+			}
+			sprite->setBlendFunc(blendFunc);
+		}
+
+#if ADJUST_UV_BY_CONTENT_SCALE_FACTOR
+		CCRect orgRect(sx, sy, sw, sh);
+		float sf = CC_CONTENT_SCALE_FACTOR();
+		float ssx = (float)sx / sf;
+		float ssy = (float)sy / sf;
+		float ssw = (float)sw / sf;
+		float ssh = (float)sh / sf;
+		sprite->setTextureRect(CCRect(ssx, ssy, ssw, ssh), false, orgRect.size);
+#else
 		sprite->setTextureRect(CCRect(sx, sy, sw, sh));
+#endif
 
 		sprite->setOpacity( opacity );
-
+		
 		float ax = (float)ox / (float)sw;
 		float ay = (float)oy / (float)sh;
 		sprite->setAnchorPoint(ccp(ax, ay));
@@ -863,6 +1274,7 @@ void SSPlayer::setFrame(int frameNo)
 			vquad.br.vertices.x += r.readS16();
 			vquad.br.vertices.y -= r.readS16();
 		}
+
 
 		// color blend
 		ccColor4B color4 = { 0xff, 0xff, 0xff, 0 };
@@ -908,11 +1320,50 @@ void SSPlayer::setFrame(int frameNo)
 			}
 		}
 
-		sprite->setVisible(true);
-
+		// この時点の座標、スケール値などを記録しておく
 		partState->m_x = sprite->getPositionX();
 		partState->m_y = sprite->getPositionY();
+		partState->m_scaleX = sprite->getScaleX();
+		partState->m_scaleY = sprite->getScaleY();
+		partState->m_rotation = sprite->getRotation();
+		partState->m_sprite = sprite;
+
+		// Normalパーツのみ実際に表示する
+		bool visibled = (partType == kSSPartTypeNormal) && !(flags & SS_PART_FLAG_INVISIBLE);
+		sprite->setVisible(visibled);
 	}
+
+#if (COCOS2D_VERSION >= 0x00020100)
+	if (useAffineTransformation)
+	{
+		//親のアフィン変換を適用するコード(SS5準拠）
+		//ルートパーツ以外を処理
+		size_t partsCount = m_ssDataHandle->getNumParts();
+		for (size_t partNo = 1; partNo < partsCount; partNo++)
+		{
+			CCAffineTransform trans = CCAffineTransformMakeIdentity();
+
+			//親子を調べる
+			const SSPartData* partData = &m_ssDataHandle->getPartData()[partNo];
+			SSPartState* paernt_partState = static_cast<SSPartState*>( m_partStates.objectAtIndex(partData->parentId) );
+			trans = paernt_partState->m_trans;
+
+			trans = CCAffineTransformTranslate( trans , paernt_partState->m_x , paernt_partState->m_y );
+			trans = CCAffineTransformRotate( trans , CC_DEGREES_TO_RADIANS(-paernt_partState->m_rotation) );// Rad?
+			trans = CCAffineTransformScale( trans , paernt_partState->m_scaleX,paernt_partState->m_scaleY );
+
+			SSPartState* partState = static_cast<SSPartState*>( m_partStates.objectAtIndex(partNo) );
+//			CCLOG("addr: %08lx, %08lx, %f, %f, %f, %f, %f", partState, partState->m_sprite, partState->m_x, partState->m_y, partState->m_scaleX, partState->m_scaleY, partState->m_rotation);
+//			if (!partState->m_sprite) continue;
+
+			partState->m_trans = trans;
+			if (partState->m_sprite)
+			{
+				partState->m_sprite->setAdditionalTransform( trans );
+			}
+		}
+	}
+#endif
 }
 
 void SSPlayer::setFlipX(bool bFlipX)
@@ -941,13 +1392,34 @@ void SSPlayer::setScaleY(float fScaleY)
 	cocos2d::CCSprite::setScaleY(temp);
 }
 
+float SSPlayer::getScaleX()
+{
+	return m_ssPlayerScaleX;
+}
+
+float SSPlayer::getScaleY()
+{
+	return m_ssPlayerScaleY;
+}
+
+float SSPlayer::getScale()
+{
+    CCAssert( m_ssPlayerScaleX == m_ssPlayerScaleY, "SSPlayer#scale. ScaleX != ScaleY. Don't know which one to return");
+	return m_ssPlayerScaleX;
+}
+
 void SSPlayer::setChildVisibleAll(bool visible)
 {
-    CCObject* child;
-    CCARRAY_FOREACH(m_pChildren, child)
-	{
-		CCNode* node = static_cast<CCNode*>(child);
-		node->setVisible(visible);
+	//SSPlayerの子要素のバッチノードと、バッチノードの子要素のCCSpriteのVisibleを全てセットする
+	CCArray* a = getChildren();
+	int pn = getChildrenCount();
+	for( int i = 0; i < pn; ++i){
+		CCNode* nodep = static_cast<CCNode*>( a->objectAtIndex(i));
+		nodep->setVisible(visible);
+		int pc = nodep->getChildrenCount();
+		for( int j = 0; j < pc; ++j){
+			static_cast<CCNode*>( nodep->getChildren()->objectAtIndex(j))->setVisible(visible);
+		}
 	}
 }
 
@@ -1020,6 +1492,18 @@ void SSPlayer::checkUserData(int frameNo)
 	}
 }
 
+void SSPlayer::registerBatch(SSPlayerBatch *batch)
+{
+	this->unscheduleUpdate();
+	m_batch = batch;
+}
+
+void SSPlayer::unregisterBatch(SSPlayerBatch *batch)
+{
+	m_batch = 0;
+	this->scheduleUpdate();
+}
+
 
 
 /**
@@ -1031,6 +1515,200 @@ SSPlayerDelegate::~SSPlayerDelegate()
 
 void SSPlayerDelegate::onUserData(SSPlayer* player, const SSUserData* data, int frameNo, const char* partName)
 {}
+
+
+
+/**
+ * SSPlayerBatch
+ *
+ * SSPlayerをSSPlayerBatch配下に配置（addChild）することにより、
+ * できる限りバッチノードを使った描画を行うようになります。
+ * ※SSPlayerBatchはSSPlayerのみ登録可能です。
+ *
+ * 以下の条件を満たしているとき、バッチノードを使った描画が行われます。（条件に合わないパーツは単独で描画されます）
+ * ・同一のテクスチャを使用している
+ * ・次の効果を使用していない：頂点変形、カラーブレンド、αブレンドでMIX以外
+ */
+
+SSPlayerBatch::SSPlayerBatch()
+	: m_players(NULL)
+	, m_bundles(NULL)
+	, m_defaultCapacity(kDefaultSpriteBatchCapacity)
+{
+}
+
+SSPlayerBatch::~SSPlayerBatch()
+{
+	this->unscheduleUpdate();
+	CC_SAFE_RELEASE_NULL(m_bundles);
+	CC_SAFE_RELEASE_NULL(m_players);
+}
+
+SSPlayerBatch* SSPlayerBatch::create()
+{
+	SSPlayerBatch* batch = new SSPlayerBatch();
+	if (batch && batch->init())
+	{
+		batch->autorelease();
+		return batch;
+	}
+	CC_SAFE_DELETE(batch);
+	return NULL;
+}
+
+bool SSPlayerBatch::init()
+{
+    if (!CCNode::init())
+	{
+		return false;
+	}
+	
+	CC_SAFE_RELEASE_NULL(m_bundles);
+	CC_SAFE_RELEASE_NULL(m_players);
+	
+	CCNode* players = CCNode::create();
+	if (!players)
+	{
+		return false;
+	}
+	
+	CCNode* bundles = CCNode::create();
+	if (!bundles)
+	{
+		delete players;
+		return false;
+	}
+	
+	players->retain();
+	bundles->retain();
+	
+	m_players = players;
+	players->setVisible(false);
+	CCNode::addChild(players, 0, 0);
+	m_bundles = bundles;
+	CCNode::addChild(bundles, 0, 0);
+	
+	this->scheduleUpdate();
+	return true;
+}
+
+void SSPlayerBatch::setDefaultSpriteBatchCapacity(unsigned int capacity)
+{
+	m_defaultCapacity = capacity;
+}
+
+void SSPlayerBatch::addChild(CCNode* child, int zOrder, int tag)
+{
+    CCAssert(child != NULL, "child should not be null");
+    CCAssert(dynamic_cast<SSPlayer*>(child) != NULL, "SSPlayerBatch only supports SSPlayer as children");
+    SSPlayer* player = (SSPlayer*)(child);
+
+	m_players->addChild(child, zOrder, tag);
+	player->registerBatch(this);
+}
+
+void SSPlayerBatch::addChild(CCNode* child, int zOrder)
+{
+	CCNode::addChild(child, zOrder);
+}
+
+void SSPlayerBatch::addChild(CCNode* child)
+{
+	CCNode::addChild(child);
+}
+
+void SSPlayerBatch::removeChild(CCNode* child)
+{
+    CCAssert(child != NULL, "child should not be null");
+    SSPlayer* player = (SSPlayer*)(child);
+
+	player->unregisterBatch(this);
+	m_players->removeChild(player);
+}
+
+enum SSPlayerBatchTag
+{
+	SSPLAYERBATCHTAG_NODE = 1,
+	SSPLAYERBATCHTAG_BATCH_NODE
+};
+
+void SSPlayerBatch::update(float dt)
+{
+	m_currentNodeIndex = -1;
+	m_currentNode = NULL;
+	m_currentBatchNode = NULL;
+	m_isBatchNodeCurrent = false;
+	m_currentTexture = NULL;
+	
+	CCObject* child;
+
+	if (m_bundles->getChildren())
+	{
+		CCARRAY_FOREACH(m_bundles->getChildren(), child)
+		{
+			CCNode* bundleNode = (CCNode*)child;
+			if (bundleNode && bundleNode->isVisible())
+			{
+				bundleNode->setVisible(false);
+				CCNode* node = (CCNode*)bundleNode->getChildByTag(SSPLAYERBATCHTAG_NODE);
+				CCSpriteBatchNode* batchNode = (CCSpriteBatchNode*)bundleNode->getChildByTag(SSPLAYERBATCHTAG_BATCH_NODE);
+				node->removeAllChildrenWithCleanup(false);
+				batchNode->removeAllChildrenWithCleanup(false);
+			}
+		}
+	}
+
+	if (m_players->getChildren())
+	{
+		CCARRAY_FOREACH(m_players->getChildren(), child)
+		{
+			SSPlayer* player = (SSPlayer*)child;
+			if (player)
+			{
+				player->updateFrame(dt);
+			}
+		}
+	}
+}
+
+void SSPlayerBatch::getNode(cocos2d::CCNode*& node, bool batchNodeRequired, cocos2d::CCTexture2D* tex)
+{
+	bool nextNode =
+		(m_currentNode == NULL) ||
+		(batchNodeRequired != m_isBatchNodeCurrent) ||
+		(m_isBatchNodeCurrent && tex != m_currentTexture);
+		
+	if (nextNode)
+	{
+		m_currentNodeIndex++;
+		if (!m_bundles->getChildren() || m_currentNodeIndex >= m_bundles->getChildren()->count())
+		{
+			// 新しくノードを生成する
+			m_currentNode = CCNode::create();
+			m_currentBatchNode = CCSpriteBatchNode::createWithTexture(tex, m_defaultCapacity);
+
+			CCNode* bundleNode = CCNode::create();
+			bundleNode->addChild(m_currentNode, 0, SSPLAYERBATCHTAG_NODE);
+			bundleNode->addChild(m_currentBatchNode, 0, SSPLAYERBATCHTAG_BATCH_NODE);
+			m_bundles->addChild(bundleNode);
+		}
+		else
+		{
+			// 既存のノードを流用
+			CCNode* bundleNode = (CCNode*)m_bundles->getChildren()->objectAtIndex(m_currentNodeIndex);
+			m_currentNode = (CCNode*)bundleNode->getChildByTag(SSPLAYERBATCHTAG_NODE);
+			m_currentBatchNode = (CCSpriteBatchNode*)bundleNode->getChildByTag(SSPLAYERBATCHTAG_BATCH_NODE);
+			m_currentBatchNode->setTexture(tex);
+			bundleNode->setVisible(true);
+		}
+		m_isBatchNodeCurrent = batchNodeRequired;
+		m_currentTexture = tex;
+	}
+
+	node = m_isBatchNodeCurrent ? m_currentBatchNode : m_currentNode;
+}
+
+
 
 
 
@@ -1153,6 +1831,15 @@ void SSSprite::setOpacity(GLubyte opacity)
 	_opacity = static_cast<float>(opacity) / 255.0f;
 }
 
+#if ADJUST_UV_BY_CONTENT_SCALE_FACTOR
+void SSSprite::setVertexRect(const CCRect& rect)
+{
+	float sf = CC_CONTENT_SCALE_FACTOR();
+	m_obRect = CCRect(rect.origin.x * sf, rect.origin.y * sf, rect.size.width * sf, rect.size.height * sf);
+}
+#endif
+
+
 void SSSprite::draw(void)
 {
     CC_PROFILER_START_CATEGORY(kCCProfilerCategorySprite, "SSSprite - draw");
@@ -1169,8 +1856,7 @@ void SSSprite::draw(void)
 
     CC_NODE_DRAW_SETUP();
 
-    //ccGLBlendFunc( m_sBlendFunc.src, m_sBlendFunc.dst );
-    ccGLBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+    ccGLBlendFunc( m_sBlendFunc.src, m_sBlendFunc.dst );
 
     if (m_pobTexture != NULL)
     {

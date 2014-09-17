@@ -1,4 +1,4 @@
-#ifndef __SS_PLAYER_DATA_H__
+﻿#ifndef __SS_PLAYER_DATA_H__
 #define __SS_PLAYER_DATA_H__
 
 #ifdef __cplusplus
@@ -10,6 +10,21 @@ typedef unsigned short	ss_u16;
 typedef unsigned int	ss_u32;
 typedef int				ss_s32;
 typedef int				ss_offset;
+
+
+typedef enum {
+	kSSPartTypeNormal,
+	kSSPartTypeNull
+} SSPartType;
+
+
+typedef enum {
+	kSSPartAlphaBlendMix,
+	kSSPartAlphaBlendMultiplication,
+	kSSPartAlphaBlendAddition,
+	kSSPartAlphaBlendSubtraction
+} SSPartAlphaBlend;
+
 
 
 typedef struct {
@@ -25,6 +40,8 @@ typedef struct {
 	ss_s16		id;
 	ss_s16		parentId;
 	ss_s16		imageNo;
+	ss_u16		type;			// enum SSPartType
+	ss_u16		alphaBlend;		// enum SSPartAlphaBlend
 	ss_s16		reserved;
 } SSPartData;
 
