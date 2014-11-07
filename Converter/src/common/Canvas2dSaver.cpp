@@ -413,6 +413,15 @@ static void writeFrameParam(std::ostream& out, const SsMotionFrameDecoder::Frame
 	params.addInt(flipV, 0);
 	params.addFloat(param.tran.value, 1.0f);
 	params.addInt(alphaBlend, 0);
+	params.addInt(param.vert.value.v[0].x, 0);	//頂点変形がある場合は出力します。
+	params.addInt(param.vert.value.v[0].y, 0);
+	params.addInt(param.vert.value.v[1].x, 0);
+	params.addInt(param.vert.value.v[1].y, 0);
+	params.addInt(param.vert.value.v[2].x, 0);
+	params.addInt(param.vert.value.v[2].y, 0);
+	params.addInt(param.vert.value.v[3].x, 0);
+	params.addInt(param.vert.value.v[3].y, 0);
+	
 
 	out << "[";
 	out << params.toEllipsisString();
