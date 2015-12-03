@@ -73,8 +73,19 @@ function SsInternalFunc.setPartParams(part, animation, frame, index,obj)
 	if #params >= ORG_X then orgX = params[ORG_X] end
 	local orgY = 0
 	if #params >= ORG_Y then orgY = params[ORG_Y] end
-	part.xReference = orgX
-	part.yReference = orgY
+
+	-- [deprecated] on Graphics2.0 at 2015/12/3
+	--part.xReference = orgX
+	--part.yReference = orgY
+
+	-- for Graphics2.0
+	local frames = animation.imageOptions[1].frames
+	if frames ~= nil and #frames >= 1 then
+		local imageRect = frames[ 1 + params[SHEET_FRAME_NO]]
+		part.anchorX = (orgX + imageRect.width / 2) / imageRect.width
+		part.anchorY = (orgY + imageRect.height / 2) / imageRect.height
+	end
+
 
 	local rot = 0
 	if #params >= ROT then rot = params[ROT] end
