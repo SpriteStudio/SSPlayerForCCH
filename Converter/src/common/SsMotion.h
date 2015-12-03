@@ -641,6 +641,10 @@ public:
 	{
 		int		endFrameNo;
 		int		baseTickTime;
+		int		CanvasWidth;
+		int		CanvasHeight;
+		int		MarginWidth;
+		int		MarginHeight;
 	};
 
 	SsMotion(SsNode::Ptr rootNode, const Param& param, SsImageList::Ptr imageList);
@@ -653,6 +657,11 @@ public:
 	SsImageList::ConstPtr getImageList() const	{ return _imageList; }
 
 	int getTotalFrame() const					{ return _param.endFrameNo + 1; }
+
+	int getCanvasWidth() const					{ return _param.CanvasWidth; }
+	int getCanvasHeight() const					{ return _param.CanvasHeight; }
+	int getMarginWidth() const					{ return _param.MarginWidth; }
+	int getMarginHeight() const					{ return _param.MarginHeight; }
 
 private:
 	SsNode::Ptr			_rootNode;
