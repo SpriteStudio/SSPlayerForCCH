@@ -3,5 +3,5 @@
 ドキュメントはこちらです。  
 https://github.com/SpriteStudio/SSPlayerForCCH/wiki
 
-Documents are here.  
+English documents are here.  
 https://github.com/SpriteStudio/SSPlayerForCCH/wiki/en
