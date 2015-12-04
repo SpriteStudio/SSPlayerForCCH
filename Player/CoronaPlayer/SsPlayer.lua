@@ -86,7 +86,6 @@ function SsInternalFunc.setPartParams(part, animation, frame, index,obj)
 		part.anchorY = (orgY + imageRect.height / 2) / imageRect.height
 	end
 
-
 	local rot = 0
 	if #params >= ROT then rot = params[ROT] end
 	part.rotation = rot
@@ -249,6 +248,7 @@ SsObject.new = function(player, animation, initParams)
 					pm:insert(ps)
 				end
 				pm.isVisible = false;
+				pm.anchorChildren = true	--for Graphics 2.0
 				table.insert(parts, pm)
 			end
 		
