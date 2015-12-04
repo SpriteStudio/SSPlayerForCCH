@@ -2,3 +2,6 @@
 
 ドキュメントはこちらです。  
 https://github.com/SpriteStudio/SSPlayerForCCH/wiki
+
+Documents are here.  
+https://github.com/SpriteStudio/SSPlayerForCCH/wiki/Home.en
