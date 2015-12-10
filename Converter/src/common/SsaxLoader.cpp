@@ -117,6 +117,39 @@ static shared_ptr<SsMotion::Param> readHeader(const ptree& pt)
 
 		param->endFrameNo = endFrameNo.get();
 		param->baseTickTime = baseTickTime.get();
+		param->CanvasWidth = 0;
+		param->CanvasHeight = 0;
+		param->MarginWidth = 0;
+		param->MarginHeight = 0;
+
+
+
+		optional<const ptree&> OptionState = pt.get_child_optional("OptionState");
+		if (OptionState)
+		{
+			BOOST_FOREACH(const ptree::value_type& v2, pt.get_child("OptionState"))
+			{
+				if (v2.first == "ScreenSize")
+				{
+					const ptree& ScreenSize = v2.second;
+					optional<int> CanvasWidth = ScreenSize.get_optional<int>("CanvasWidth");
+					if (!CanvasWidth) break;
+					optional<int> CanvasHeight = ScreenSize.get_optional<int>("CanvasHeight");
+					if (!CanvasHeight) break;
+					optional<int> MarginWidth = ScreenSize.get_optional<int>("MarginWidth");
+					if (!MarginWidth) break;
+					optional<int> MarginHeight = ScreenSize.get_optional<int>("MarginHeight");
+					if (!MarginHeight) break;
+
+					param->CanvasWidth = CanvasWidth.get();
+					param->CanvasHeight = CanvasHeight.get();
+					param->MarginWidth = MarginWidth.get();
+					param->MarginHeight = MarginHeight.get();
+				}
+			}
+		}
+
+
 
 		return param;
 

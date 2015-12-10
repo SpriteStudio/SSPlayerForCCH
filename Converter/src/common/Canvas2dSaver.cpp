@@ -233,6 +233,12 @@ void writeParts(std::ostream& out, textenc::Encoding outEncoding, ss::SsMotion::
 	const int fps = motion->getBaseTickTime();
 	const std::string nameList = getPartNameList(motion, outEncoding, qt);
 
+	const int CanvasWidth = motion->getCanvasWidth();
+	const int CanvasHeight = motion->getCanvasHeight();
+	const int MarginWidth = motion->getMarginWidth();
+	const int MarginHeight = motion->getMarginHeight();
+
+
 	std::stringstream ss;
 	ss << std::endl;
 	const std::string crlf = ss.str();
@@ -242,17 +248,21 @@ void writeParts(std::ostream& out, textenc::Encoding outEncoding, ss::SsMotion::
 	const char* fmtTop = options.isJson ?
 		// json
         "\"name\": \"%2%\","	"%1%"
-		"\"animation\": {"      "%1%"
+		"\"animation\": {"		"%1%"
 		"\"fps\": %3%,"         "%1%"
-		"\"parts\": [%4%],"     "%1%"
+		"\"CanvasWidth\": %4%," "%1%"
+		"\"CanvasHeight\": %5%," "%1%"
+		"\"MarginWidth\": %6%,"  "%1%"
+		"\"MarginHeight\": %7%," "%1%"
+		"\"parts\": [%8%],"     "%1%"
 		"\"ssa\": ["            "%1%" :
 		// normal
 		"var %2% = {"           "%1%"
 		"fps: %3%,"             "%1%"
-		"parts: [%4%],"         "%1%"
+		"parts: [%8%],"         "%1%"
 		"ssa: ["                "%1%" ;
 
-	out << format(fmtTop) % crlf % prefix % fps % nameList;
+		out << format(fmtTop) % crlf % prefix % fps % CanvasWidth % CanvasHeight % MarginWidth % MarginHeight % nameList;
 
 
 	// 各パーツのフレームごとのパラメータ値 
