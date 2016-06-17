@@ -138,8 +138,14 @@ SsAnimation.prototype.drawFunc = function (ctx, frameNo, x, y, flipH, flipV, par
 	var iFlipH = 13;
 	var iFlipV = 14;
 	var iAlpha = 15;
-	var iV0X = 16;
-	var iV0Y = 17;
+	var iBlend = 16;
+
+	var blendOperations = new Array(
+		"source-over",
+		"source-over",
+		"lighter",
+		"source-over"
+	);
 
 	var frameData = this.ssaData.ssa[frameNo];
 	for (var refNo = 0; refNo < frameData.length; refNo++) {
@@ -159,17 +165,6 @@ SsAnimation.prototype.drawFunc = function (ctx, frameNo, x, y, flipH, flipV, par
 		var vdw = sw;
 		var vdh = sh;
 
-		// 左上の頂点変形のみ反映
-		// Reflect only changes in the upper-left vertex deformation.
-		if (partDataLen > iV0X) {
-			dx += partData[iV0X];
-			vdw -= partData[iV0X];
-		}
-		if (partDataLen > iV0Y) {
-			dy += partData[iV0Y];
-			vdh -= partData[iV0Y];
-		}
-
 		dx += x;
 		dy += y;
 
@@ -184,7 +179,9 @@ SsAnimation.prototype.drawFunc = function (ctx, frameNo, x, y, flipH, flipV, par
 			var fh = (partDataLen > iFlipH) ? (partData[iFlipH] != 0 ? -1 : 1) : (1);
 			var fv = (partDataLen > iFlipV) ? (partData[iFlipV] != 0 ? -1 : 1) : (1);
 			var alpha = (partDataLen > iAlpha) ? partData[iAlpha] : 1.0;
+			var blend = (partDataLen > iBlend) ? partData[iBlend] : 0;
 
+			ctx.globalCompositeOperation = blendOperations[blend];
 			ctx.globalAlpha = alpha;
 			//ctx.setTransform(1, 0, 0, 1, dx, dy); 		// 最終的な表示位置へ. To display the final position.
 			ctx.setTransform(1 * scale, 0, 0, 1 * scale, dx * scale, dy * scale); 	// 最終的な表示位置へ. To display the final position.
